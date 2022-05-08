@@ -1,0 +1,27 @@
+servers:
+     1Cbas2ZWQ8Kq:
+          owner: "nathaniel@singer.cloud"
+          health: Healthy
+          last-updated: 1651993737
+          os: Ubuntu 20.04
+
+     w8w5t32JFMzT:
+          owner: "nathaniel@singer.cloud"
+          health: Healthy
+          last-updated: 1651993737
+          os: Ubuntu 20.04
+
+     hFc8c7Hhr8wj:
+          owner: "nathaniel@singer.cloud"
+          health: Healthy
+          last-updated: 1651993737
+          os: Ubuntu 20.04
+
+     PG4f8DE87v7U:
+          owner: "nathaniel@singer.cloud"
+          health: Healthy
+          last-updated: 1651993737
+          os: Ubuntu 20.04
+
+databases:
+     loSk3p4DD8V9
