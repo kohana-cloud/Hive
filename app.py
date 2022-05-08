@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, send_from_directory
+from flask import Flask, render_template, redirect, send_from_directory
 from src.code.Honeypots import VPS, ingest_honeypots
 import os
 
