@@ -6,48 +6,72 @@
 
   {%for i in range(0, count)%}
   
-  <div class="card" style="padding: 0; margin: 20px; width: 400px; background-color: rgb(252, 252, 252);">
+  <div class="card" id="card-{{honeypots[i].id}}" style="padding: 0; margin: 20px; width: 350px; background-color: rgb(252, 252, 252);">
+    {% if honeypots[i].health == "Healthy" %}
+    
     <div class="card-header" style="background-color: rgb(0, 200, 0); color: rgb(255, 255, 255); text-align: center;">
-      <state>Healthy</state>
+      <state>{{honeypots[i].health}}</state>
     </div>
+
+    {% elif honeypots[i].health == "Degraded" %}
+
+    <div class="card-header" style="background-color: rgb(200, 200, 0); color: rgb(255, 255, 255); text-align: center;">
+      <state>{{honeypots[i].health}}</state>
+    </div>
+
+    {% elif honeypots[i].health == "Compromised" %}
+
+    <div class="card-header" style="background-color: rgb(200, 0, 0); color: rgb(255, 255, 255); text-align: center;">
+      <state>{{honeypots[i].health}}</state>
+    </div>
+
+    {% elif honeypots[i].health == "Attacker Present" %}
+
+    <div class="card-header" style="background-color: rgb(200, 0, 0); color: rgb(255, 255, 255); text-align: center;">
+      <state>{{honeypots[i].health}}</state>
+    </div>
+
+    {% endif %}
+
+    
 
     {% if honeypots[i].type == "VPS" %}
 
     <div class="card-body">
       <img src="static/graphics/endpoint-images/vps-fill.svg" height=75 class="card-img-top">
-      <h5 class="card-title" style=" text-align: center; margin-top: 10px;">Virtual Private Server (VPS)</h5>
+      <h5 class="card-title" style=" text-align: center; margin-top: 10px;">VPS</h5>
       
       <p style="text-align: center;">
         {{honeypots[i].id}}
       </p>
 
+      <form class="form-grid" style="margin:auto; display:block; margin-top: 30px;">
+        <div class="row" style="margin: 0;">
+            <div class="col">
+                <div class="row">
+                  <button type="button" id="buttonUUID" class="btn btn-dark" style="margin:auto; width: 90%;">Image</button>
+                </div>
+            </div>
+            <div class="col">
+              <div class="row">
+                <button type="button" id="buttonUUID" class="btn btn-danger" style="margin:auto; width: 90%;">Reset</button>
+              </div>
+            </div>
+        </div>
+    </form>
+    </div>
+
+    {% endif %}
+
+    {% if honeypots[i].type == "Database" %}
+
+    <div class="card-body">
+      <img src="static/graphics/endpoint-images/db-fill.svg" height=75 class="card-img-top">
+      <h5 class="card-title" style=" text-align: center; margin-top: 10px;">Database</h5>
       
-      <table class="table table-sm">
-        <thead>
-          <tr>
-            <th scope="col">Int</th>
-            <th scope="col">Address</th>
-            <th scope="col">Mask</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">eno1</th>
-            <td>192.168.1.1</td>
-            <td>255.255.255.0 (24)</td>
-          </tr>
-          <tr>
-            <th scope="row"></th>
-            <td>192.168.2.1</td>
-            <td>255.255.255.0 (24)</td>
-          </tr>
-          <tr>
-            <th scope="row">vpn0</th>
-            <td>10.0.73.2</td>
-            <td>255.255.255.128 (25)</td>
-          </tr>
-        </tbody>
-      </table>
+      <p style="text-align: center;">
+        {{honeypots[i].id}}
+      </p>
 
       <form class="form-grid" style="margin:auto; display:block; margin-top: 30px;">
         <div class="row" style="margin: 0;">
