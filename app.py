@@ -1,18 +1,13 @@
 from cgi import test
 from flask import Flask, render_template, redirect, send_from_directory, jsonify
-from src.code.Honeypots import VPS, ingest_honeypots
+from src.code.Honeypots import ingest_honeypots
 import os
 
-app = Flask(__name__,
-    template_folder=os.path.abspath('src/pages'))
 
-"""honeypots = ["1Cbas2ZWQ8Kq", "4pU5QL94LhL5", "w8w5t32JFMzT",
-    "PG4f8DE87v7U", "fBHpk7qhF10q", "m9ZeSk5AQ6et",
-    "PuDk4whtk9U1", "eL8P89qQAYzT", "g3vDH5FXDDEo",
-    "tx4LcT6vMTKT"]"""
+app = Flask(__name__, template_folder=os.path.abspath('src/pages'))
 
-hp1 = VPS("1Cbas2ZWQ8Kq", "Nathaniel Singer", "Healthy", 1651993737, "Ubuntu 20")
 honeypots = ingest_honeypots("data/honeypots.yaml")
+
 
 # Static routes
 @app.route('/', methods=["GET"])
@@ -49,29 +44,57 @@ test_data = {
         'type': 'VPS',
         'os': 'Ubuntu 20.04',
         'owner': 12345,
-        'updated': 1651993737,
-        'health': 'Healthy'
+        'updated': 1652262306,
+        'health': 0
     },
     'w8w5t32JFMzT': {
         'type': 'VPS',
         'os': 'Ubuntu 20.04',
         'owner': 12345,
-        'updated': 1651993737,
-        'health': 'Compromised'
+        'updated': 1651233737,
+        'health': 1
     },
     'hFc8c7Hhr8wj': {
         'type': 'Database',
         'os': 'Ubuntu 20.04',
         'owner': 12345,
-        'updated': 1651993737,
-        'health': 'Attacker Present'
+        'updated': 1651953237,
+        'health': 3
     },
     '0ooQzs78Aizu': {
         'type': 'Database',
         'db-engine': 'mysql',
         'owner': 12345,
         'updated': 1651993737,
-        'health': 'Healthy'
+        'health': 0
+    },
+    '0ooQzs78Aizu': {
+        'type': 'Database',
+        'db-engine': 'mysql',
+        'owner': 12345,
+        'updated': 1651233737,
+        'health': 0
+    },
+    '0SK8zO8VB8Wj': {
+        'type': 'Database',
+        'db-engine': 'mysql',
+        'owner': 12345,
+        'updated': 1651123437,
+        'health': 0
+    },
+    'qVAUYY6C67tv': {
+        'type': 'Database',
+        'db-engine': 'mysql',
+        'owner': 12345,
+        'updated': 1651933123,
+        'health': 2
+    },
+    'yCdPU4EtIk33': {
+        'type': 'Database',
+        'db-engine': 'mysql',
+        'owner': 12345,
+        'updated': 1651993737,
+        'health': 0
     }
 }
 
