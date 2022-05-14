@@ -59,7 +59,7 @@ test_data = {
         'type': 'VPS',
         'os': 'Ubuntu 20.04',
         'owner': 12345,
-        'updated': 1652262306,
+        'updated': 1652508781,
         'health': 0
     },
     'w8w5t32JFMzT': {
@@ -74,7 +74,7 @@ test_data = {
         'os': 'Ubuntu 20.04',
         'owner': 12345,
         'updated': 1651953237,
-        'health': 3
+        'health': 1
     },
     '0ooQzs78Aizu': {
         'type': 'Database',
@@ -83,19 +83,11 @@ test_data = {
         'updated': 1651993737,
         'health': 0
     },
-    '0ooQzs78Aizu': {
-        'type': 'Database',
-        'db-engine': 'mysql',
-        'owner': 12345,
-        'updated': 1651233737,
-        'health': 0
-    },
     '0SK8zO8VB8Wj': {
-        'type': 'Database',
-        'db-engine': 'mysql',
+        'type': 'NAS',
         'owner': 12345,
         'updated': 1651123437,
-        'health': 0
+        'health': 3
     },
     'qVAUYY6C67tv': {
         'type': 'Database',
@@ -105,45 +97,9 @@ test_data = {
         'health': 2
     },
     'yCdPU4EtIk33': {
-        'type': 'Database',
-        'db-engine': 'mysql',
+        'type': 'NAS',
         'owner': 12345,
-        'updated': 1651993737,
-        'health': 0
-    },
-    'yCdPU4EtIk34': {
-        'type': 'Database',
-        'db-engine': 'mysql',
-        'owner': 12345,
-        'updated': 1651993737,
-        'health': 0
-    },
-    'yCdPU4EtIk35': {
-        'type': 'Database',
-        'db-engine': 'mysql',
-        'owner': 12345,
-        'updated': 1651993737,
-        'health': 0
-    },
-    'yCdPU4EtIk36': {
-        'type': 'Database',
-        'db-engine': 'mysql',
-        'owner': 12345,
-        'updated': 1652478564,
-        'health': 0
-    },
-    'yCdPU4EtIk37': {
-        'type': 'Database',
-        'db-engine': 'mysql',
-        'owner': 12345,
-        'updated': 1651993737,
-        'health': 0
-    },
-    'yCdPU4EtIk38': {
-        'type': 'Database',
-        'db-engine': 'mysql',
-        'owner': 12345,
-        'updated': 1652478558,
+        'updated': 1652507693,
         'health': 0
     }
 }

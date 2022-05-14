@@ -77,7 +77,15 @@ function cardBodyTemplate(id, attributes) {
     </div>`
 }
 
+function cardRenderNew() {
+    return `
+    <div id="card-new" class="card" style="padding: 0; margin: 20px; width: 200px; background-color: rgb(252, 252, 252);">
+        <img id="card-new-img" src="static/graphics/endpoint-images/plus-dotted.svg" height=100 class="width: max-content; card-img-top" style="position: absolute; top: 50%; -ms-transform: translateY(-50%);transform: translateY(-50%);"/>
+    </div>`
+}
+
 function cardFooterTemplate(id, attributes) {
+    
     switch (attributes.health) {
         case 0:
             var footerText = "loading"
@@ -117,6 +125,9 @@ function updateAllCards() {
         honeypot_cards += cardTemplate(hpId);
     });
 
+    // Add new block
+    honeypot_cards += cardRenderNew()
+
     // Render the card shells
     document.getElementById("card-container").innerHTML = honeypot_cards;
     
@@ -141,26 +152,34 @@ function updateAllCards() {
 
 // Generate HTML from JSON and render
 function updateCardFooters() {
-    var dtNow = new Date().getTime();
+    let dtNow = new Date().getTime();
 
     // Update Text
     $.each(jsonData, function (hpId, hpAttributes) {
         // Convert last update timestamp of target
-        var dtTarget = new Date(hpAttributes.updated*1000).getTime();
-        var dtDelta = dtNow - dtTarget;
+        let dtTarget = new Date(hpAttributes.updated*1000).getTime();
+        let dtDelta = dtNow - dtTarget;
 
-        var days = Math.floor(dtDelta / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((dtDelta % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((dtDelta % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((dtDelta % (1000 * 60)) / 1000);
+        let days = Math.floor(dtDelta / (1000 * 60 * 60 * 24));
+        let hours = Math.floor((dtDelta % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((dtDelta % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((dtDelta % (1000 * 60)) / 1000);
 
         let finalText = "";
-        if (days !== 0) {
+        if (days == 1) {
+            finalText = `1 day ago`
+        } else if (days !== 0) {
             finalText = `${days} days ago`
+        } else if (hours == 1) {
+            finalText = `1 hour ago`
         } else if (hours !== 0) {
             finalText = `${hours} hours ago`
+        } else if (minutes == 1) {
+            finalText = `1 minute ago`
         } else if (minutes !== 0) {
             finalText = `${minutes} minutes ago`
+        } else if (seconds == 1) {
+            finalText = `1 second ago`
         } else {
             finalText = `${seconds} seconds ago`
         }
@@ -190,8 +209,8 @@ $(document).ready(function() {
 // Start updating card footer times every second
 function updateDate() {
     updateCardFooters();
-
 } var run = setInterval(updateDate, 1000);
+
 
 var flashOn = false;
 function flashLive() {
@@ -206,16 +225,21 @@ function flashLive() {
 
             // Update background
             if (!flashOn) {
-                //set title here with document.title
                 document.getElementById("card-" + id).style.border = "1px solid rgba(0, 0, 0, 0.125)";
                 document.getElementById("card-" + id).style["boxShadow"] = null
-                flashOn = true
             } else {
                 document.getElementById("card-" + id).style.border = "1px solid red";
                 document.getElementById("card-" + id).style["boxShadow"] = "0 0 5px red";
-                flashOn = false
             }
             
         } // reversion should be handled elsewhere
     });
+
+    // Flip state
+    if (flashOn) {
+        flashOn = false;
+    } else {
+        flashOn = true;
+    }
+    
 } var run = setInterval(flashLive, 250);
