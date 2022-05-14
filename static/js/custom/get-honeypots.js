@@ -188,7 +188,34 @@ $(document).ready(function() {
 });
 
 // Start updating card footer times every second
-function update_date() {
+function updateDate() {
     updateCardFooters();
 
-} var run = setInterval(update_date, 1000);
+} var run = setInterval(updateDate, 1000);
+
+var flashOn = false;
+function flashLive() {
+    var d = new Date()
+    
+    $.each(jsonData, function (id, attributes) {
+        // Verify card represents a honeypot under attack
+        if (attributes.health == 3) {
+            // Update component colors
+            document.getElementById("card-body-" + id).style.backgroundColor = "rgb(255,220,220)";
+            document.getElementById("card-footer-" + id).style.backgroundColor = "rgb(250,180,180)";
+
+            // Update background
+            if (!flashOn) {
+                //set title here with document.title
+                document.getElementById("card-" + id).style.border = "1px solid rgba(0, 0, 0, 0.125)";
+                document.getElementById("card-" + id).style["boxShadow"] = null
+                flashOn = true
+            } else {
+                document.getElementById("card-" + id).style.border = "1px solid red";
+                document.getElementById("card-" + id).style["boxShadow"] = "0 0 5px red";
+                flashOn = false
+            }
+            
+        } // reversion should be handled elsewhere
+    });
+} var run = setInterval(flashLive, 250);

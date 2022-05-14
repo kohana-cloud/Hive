@@ -1,28 +1,68 @@
-{% extends 'templates/base.html' %}
+{% extends 'templates/base-unauth.html' %}
+
 {% block content %}
 
-<html>
-  <head>
-    <title>Flask Intro - login page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
-  </head>
-  <body>
-    <div class="container">
-      <h1>Please login</h1>
-      <br>
-      <form action="" method="post">
-        <input type="text" placeholder="Username" name="username" value="{{
-          request.form.username }}">
-         <input type="password" placeholder="Password" name="password" value="{{
-          request.form.password }}">
-        <input class="btn btn-default" type="submit" value="Login">
-      </form>
-      {% if error %}
-        <p class="error"><strong>Error:</strong> {{ error }}
-      {% endif %}
-    </div>
-  </body>
-</html>
+<body>
+  <!-- Bootstrap core CSS -->
+  <link href="static/css/bootstrap.min.css" rel="stylesheet">
 
+  <!-- Custom styles for this template -->
+  <link href="static/css/floating-labels.css" rel="stylesheet">
+
+  <form class="form-signin">
+    <div class="text-center mb-4">
+      <img class="mb-4" src="static/graphics/logo.png" width="150" height="150" style="margin-top: 50px;">
+      <h1 class="h3 mb-3 font-weight-normal">Welcome to the Hive</h1>
+    </div>
+
+    <div class="form-label-group">
+      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required>
+      <label for="inputEmail">Email</label>
+    </div>
+
+    <div class="form-label-group">
+      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+      <label for="inputPassword">Password</label>
+    </div>
+
+    <button class="btn btn-primary btn-block" type="submit" style="width: 60%; display: block; margin: auto;">
+      Sign in
+    </button>
+    
+    <hr style="width: 70%; margin: 10px auto;">
+    
+    <!--Login with Google-->
+    <a class="btn btn-outline-dark" style="display:block; width: 60%; margin:5px auto;" href="" role="button">
+      <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="static/graphics/login-logos/google.png"/>
+      Login with Google
+    </a>
+
+    <!--Login with Amazon-->
+    <amazon class="btn btn-outline-dark" style="display:block; width: 60%; margin:5px auto;" href="" role="button">
+      <img id="amazon-icon" width="20px" style="margin-bottom:3px; margin-right:5px" alt="Amazon sign-in" src="static/graphics/login-logos/amazon.png"/>
+      Login with Amazon
+    </amazon>
+
+    <!--Login with Microsoft-->
+    <a class="btn btn-outline-dark amazon" style="display:block; width: 60%; margin:5px auto;" href="" role="button">
+      <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Microsoft sign-in" src="static/graphics/login-logos/microsoft.png"/>
+      Login with Microsoft
+    </a>
+  </form>
+</body>
+
+<!-- acquire jquery-->
+<script type="text/javascript" language="javascript" src="static/js/bundles/jquery-3.6.0.min.js"></script>
+
+
+<!--Invert Amazon icon to White when hovering-->
+<script>
+  $( "amazon" ).hover(
+  function() {
+    document.getElementById("amazon-icon").src = "static/graphics/login-logos/amazon-inverted.png"
+  }, function() {
+    document.getElementById("amazon-icon").src = "static/graphics/login-logos/amazon.png"
+  }
+);
+</script>
 {% endblock %}
