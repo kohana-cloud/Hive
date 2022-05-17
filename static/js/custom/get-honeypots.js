@@ -227,9 +227,13 @@ function flashLive() {
             if (!flashOn) {
                 document.getElementById("card-" + id).style.border = "1px solid rgba(0, 0, 0, 0.125)";
                 document.getElementById("card-" + id).style["boxShadow"] = null
+
+                document.title = "The Hive 🔴"
             } else {
                 document.getElementById("card-" + id).style.border = "1px solid red";
                 document.getElementById("card-" + id).style["boxShadow"] = "0 0 5px red";
+
+                document.title = "The Hive"
             }
             
         } // reversion should be handled elsewhere
