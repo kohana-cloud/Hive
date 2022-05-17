@@ -9,19 +9,21 @@
   <!-- Custom styles for this template -->
   <link href="static/css/floating-labels.css" rel="stylesheet">
 
-  <form class="form-signin">
+  <form class="form-signin" action="/login" method="POST">
     <div class="text-center mb-4">
       <img class="mb-4" src="static/graphics/logo.png" width="150" height="150" style="margin-top: 50px;">
       <h1 class="h3 mb-3 font-weight-normal">Welcome to the Hive</h1>
     </div>
 
     <div class="form-label-group">
-      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required>
-      <label for="inputEmail">Email</label>
+      <input type="username" id="inputEmail" name="username" value="{{
+        request.form.username }}" class="form-control" placeholder="Email address" required>
+      <label for="inputEmail">Username</label>
     </div>
 
     <div class="form-label-group">
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+      <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" value="{{
+        request.form.password }}" required>
       <label for="inputPassword">Password</label>
     </div>
 
@@ -48,6 +50,13 @@
       <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Microsoft sign-in" src="static/graphics/login-logos/microsoft.png"/>
       Login with Microsoft
     </a>
+
+    {% if invalid %}
+    <div class="alert alert-danger" role="alert" style="text-align: center; margin-top: 15px;">
+      Invalid credentials!
+      <script>document.getElementById("inputPassword").value = null</script>
+    </div>
+    {% endif %}
   </form>
 </body>
 

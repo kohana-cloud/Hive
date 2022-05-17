@@ -68,19 +68,3 @@ def ingest_honeypots(config_file:str) -> None:
             print(f"Error {e}")
 
     return honeypots
-
-#types: VPS, Database, Webapplication, NAS, CodeServer
-
-"""
-{'servers': 
-    {
-    '1Cbas2ZWQ8Kq': {'type': 'VPS', 'owner': 'nathaniel@singer.cloud', 'health': 'Healthy', 'last-updated': 1651993737, 'os': 'Ubuntu 20.04'},
-
-    'w8w5t32JFMzT': {'type': 'VPS', 'owner': 'nathaniel@singer.cloud', 'health': 'Healthy', 'last-updated': 1651993737, 'os': 'Ubuntu 20.04'},
-
-    'hFc8c7Hhr8wj': {'type': 'VPS', 'owner': 'nathaniel@singer.cloud', 'health': 'Healthy', 'last-updated': 1651993737, 'os': 'Ubuntu 20.04'}, 
-
-    'PG4f8DE87v7U': {'type': 'VPS', 'owner': 'nathaniel@singer.cloud', 'health': 'Healthy', 'last-updated': 1651993737, 'os': 'Ubuntu 20.04'}
-    }
-}
-"""
