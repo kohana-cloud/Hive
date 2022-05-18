@@ -18,12 +18,12 @@ limiter = Limiter(app, key_func = get_remote_address, default_limits=["20/minute
 @app.errorhandler(429)
 def ratelimit_handler(e):
     # TODO Log out user if logged in
-    return render_template('rate-limit.html'), 429
+    return render_template('rate-limit.html', jwt_name = ""), 429
 
 csrf = CSRFProtect(app)
 @app.errorhandler(CSRFError)
 def handle_csrf_error(e):
-    return render_template('csrf_error.html'), 403
+    return render_template('csrf_error.html', jwt_name = ""), 403
 
 users = ingest_users('data/users.yaml', app)
 honeypots = ingest_honeypots("data/honeypots.yaml")
