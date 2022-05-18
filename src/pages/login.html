@@ -10,6 +10,8 @@
   <link href="static/css/floating-labels.css" rel="stylesheet">
 
   <form class="form-signin" action="/login" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
     <div class="text-center mb-4">
       <img class="mb-4" src="static/graphics/logo.png" width="150" height="150" style="margin-top: 50px;">
       <h1 class="h3 mb-3 font-weight-normal">Welcome to the Hive</h1>

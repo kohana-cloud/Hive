@@ -5,6 +5,8 @@ from src.code.Honeypots import ingest_honeypots
 from src.code.Users import ingest_users
 from functools import wraps
 import secrets, os, jwt, datetime, time
+from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import CSRFError
 
 
 app = Flask(__name__, template_folder = os.path.abspath('src/pages'))
@@ -17,6 +19,11 @@ limiter = Limiter(app, key_func = get_remote_address, default_limits=["20/minute
 def ratelimit_handler(e):
     # TODO Log out user if logged in
     return render_template('rate-limit.html'), 429
+
+csrf = CSRFProtect(app)
+@app.errorhandler(CSRFError)
+def handle_csrf_error(e):
+    return render_template('csrf_error.html'), 403
 
 users = ingest_users('data/users.yaml', app)
 honeypots = ingest_honeypots("data/honeypots.yaml")
