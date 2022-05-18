@@ -34,8 +34,8 @@ def require_user(f):
         token, data = None, None
 
         # Retrieve and decode token, else error
-        if ("Authorization" in request.cookies):
-            token = request.cookies['Authorization'].split(" ")[1]
+        if ("Authentication" in request.cookies):
+            token = request.cookies['Authentication'].split(" ")[1]
             
             try: data = jwt.decode(token, app.config['SECRET_KEY'])
             except Exception as e: return f"Error: {e}", 403
@@ -102,7 +102,7 @@ def login():
 
         # Respond
         rsp = redirect("/", 302)
-        rsp.set_cookie("Authorization", bearer)
+        rsp.set_cookie("Authentication", bearer)
         return rsp
 
 @app.route('/logout', methods=["GET"])
@@ -112,8 +112,8 @@ def logout(jwt_data):
     token, data = None, None
 
     # Retrieve and decode token, else error
-    if ("Authorization" in request.cookies):
-        token = request.cookies['Authorization'].split(" ")[1]
+    if ("Authentication" in request.cookies):
+        token = request.cookies['Authentication'].split(" ")[1]
         
         try: data = jwt.decode(token, app.config['SECRET_KEY'])
         except Exception as e: return f"Error: {e}", 403
@@ -146,8 +146,8 @@ def about():
     token, data = None, None
     
     # Retrieve and decode token, else error
-    if ("Authorization" in request.cookies):
-        token = request.cookies['Authorization'].split(" ")[1]
+    if ("Authentication" in request.cookies):
+        token = request.cookies['Authentication'].split(" ")[1]
         
         try: data = jwt.decode(token, app.config['SECRET_KEY'])
         except Exception as e: return f"Error: {e}", 403
