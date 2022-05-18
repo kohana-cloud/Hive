@@ -6,8 +6,7 @@ import bcrypt
 import time
 
 class User():
-    def __init__(self, app:object, id:int, admin:bool, username:str, email:str, pwhash_salted:str, first:str, last:str, phone:str) -> None:
-        self.app = app
+    def __init__(self, id:int, admin:bool, username:str, email:str, pwhash_salted:str, first:str, last:str, phone:str) -> None:
         self.id = id
         self.username = username
         self.email = email
@@ -16,7 +15,14 @@ class User():
         self.first = first
         self.last = last
         self.phone = phone
-        self.jwt = None
+
+    def check_password(self, password:str) -> None:
+        return bcrypt.checkpw(password.encode('ascii'), self.pwhash_salted.encode('ascii'))
+
+
+
+
+
 
     def __assign_jwt(self): 
         self.jwt = jwt.encode({
@@ -59,8 +65,7 @@ class User():
 
     def expire_jwt(self): self.jwt = None
 
-    def check_password(self, password:str) -> None:
-        return bcrypt.checkpw(password.encode('ascii'), self.pwhash_salted.encode('ascii'))
+    
 
     def generate_pwhash(self, password:str) -> None:
         return bcrypt.hashpw(
@@ -83,8 +88,7 @@ def ingest_users(users_file:str, app:object) -> None:
             for id, attributes in zip(users_file['users'],
                                   users_file['users'].values()):
                 users.append(
-                    User(app = app,
-                        id = id,
+                    User(id = id,
                         username = attributes['username'],
                         email = attributes['email'],
                         admin = attributes['admin'],

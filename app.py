@@ -1,16 +1,16 @@
-from flask import Flask, render_template, redirect, send_from_directory, jsonify, request
+from flask import Flask, render_template, redirect, send_from_directory, jsonify, request, Response
 from flask_limiter.util import get_remote_address
 from flask_limiter import Limiter
 from src.code.Honeypots import ingest_honeypots
 from src.code.Users import ingest_users
-import secrets
-import os
-import jwt
-
 from functools import wraps
+import secrets, os, jwt, datetime, time
 
 
 app = Flask(__name__, template_folder = os.path.abspath('src/pages'))
+app.config['SECRET_KEY'] = str(secrets.randbits(256))
+app.config['LOGINEXP_MINS'] = 30
+app.config['BCRYPT_ROUNDS'] = 10
 
 limiter = Limiter(app, key_func = get_remote_address, default_limits=["20/minute", "200/hour"])
 @app.errorhandler(429)
@@ -18,115 +18,148 @@ def ratelimit_handler(e):
     # TODO Log out user if logged in
     return render_template('rate-limit.html'), 429
 
-
-# Used for JWT validation
-app.config['SECRET_KEY'] = str(secrets.randbits(256))
-app.config['LOGINEXP_MINS'] = 30
-app.config['BCRYPT_ROUNDS'] = 10
-
-print(f"Secret: {app.config['SECRET_KEY']}")
-
 users = ingest_users('data/users.yaml', app)
 honeypots = ingest_honeypots("data/honeypots.yaml")
+sessions = []
 
 
+# Display secret
+print(f"Secret: {app.config['SECRET_KEY']}")
 
 
+# Decorators
 def require_user(f):
     @wraps(f)
-    def decorated(*args, **kwargs):
-        token = None
+    def authenticate(*args, **kwargs):
+        token, data = None, None
 
-        # Retrieve token if it exists, else err
+        # Retrieve and decode token, else error
         if ("Authorization" in request.cookies):
             token = request.cookies['Authorization'].split(" ")[1]
+            
+            try: data = jwt.decode(token, app.config['SECRET_KEY'])
+            except Exception as e: return f"Error: {e}", 403
+
         else: return redirect("login"), 302
 
-        # Decode and verify signature
-        try: 
-            data = jwt.decode(token, app.config['SECRET_KEY'])
+        # Validate session based on authenticated user id from token
+        if not (data['id'] in sessions): return redirect("login"), 302
 
-            user_index = [ i for i,user in enumerate(users) if user.id == data['id'] ][0]
-            
-            if (users[user_index].jwt is None): 
-                return redirect("login"), 302
-            
-        except: return redirect("login"), 302
+        # TODO Determine if token is close to experiation, regen if true
 
-        return f(*args, **kwargs)
-    
-    return decorated
+        # Return original request if authentication passes
+        return f(data, *args, **kwargs)
+    return authenticate
+
+
+# Redirects
+@app.route('/', methods=["GET"])
+@limiter.limit(None)
+def root(): return redirect("dashboard"), 302
+
+@app.route('/statistics', methods=["GET"])
+@limiter.limit(None)
+def statistics(): return redirect("stats"), 302
 
 
 # Static routes
-@app.route('/', methods=["GET"])
-@limiter.limit(None)
-def root(): return redirect("dashboard", code=302)
-
 @app.route('/login', methods=["GET", "POST"])
 @limiter.limit(None)
 def login():
-    invalid = False
+    if (request.method == "GET"):
+        return render_template('login.html', jwt_name = ""), 200
 
-    if request.method == 'POST':
-        try: 
-            # Get first user where username or email matches
+    # Receive and validate credentials
+    if (request.method == "POST"):
+        # Get the first user where username or email matches, validate pw
+        try:
             user = [ user for user in users if
-                    (user.username == request.form['username']) or
-                    (user.email == request.form['username']) ][0]
+                (user.username == request.form['username']) or
+                (user.email == request.form['username']) ][0]
+        except IndexError:
+            return render_template('login.html', invalid=True), 401
 
-            # Validate password
-            if (user.check_password(request.form['password'])):
-                response = redirect("dashboard")
-                response.set_cookie("Authorization", f"Bearer {user.get_jwt().decode('utf-8')}")
-                return response
-
-            else: invalid = True
-
-        except IndexError: # User not found
-            invalid = True
+        if not (user.check_password(request.form['password'])):
+            return render_template('login.html', invalid=True), 401
             
-    return render_template('login.html', invalid=invalid)
+        # Force logout if login attempted with existing, else open new session
+        if (user.id in sessions):
+            return redirect("logout", 302)
+        else: sessions.append(user.id)
+        
+        # Generate JWT
+        token = jwt.encode({
+            'id'    : user.id,
+            'name'  : f"{user.first} {user.last}",
+            'iss'   : "The Hive",
+            'iat'   : datetime.datetime.utcnow(),
+            'exp'   : datetime.datetime.utcnow() 
+                       + datetime.timedelta(minutes = app.config['LOGINEXP_MINS'])
+            }, app.config['SECRET_KEY'], "HS256")
+
+        # Build bearer
+        bearer = f"Bearer {token.decode('utf-8')}"
+
+        # Respond
+        rsp = redirect("/", 302)
+        rsp.set_cookie("Authorization", bearer)
+        return rsp
 
 @app.route('/logout', methods=["GET"])
 @require_user
 @limiter.limit(None)
-def logout():    
-    # Decode and verify signature
-    token = request.cookies['Authorization'].split(" ")[1]
-    data = jwt.decode(token, app.config['SECRET_KEY'])
+def logout(jwt_data):
+    token, data = None, None
 
-    # Determine user by id and expire token
-    user_index = [ i for i,user in enumerate(users) if user.id == data['id'] ][0]
-    users[user_index].expire_jwt()
+    # Retrieve and decode token, else error
+    if ("Authorization" in request.cookies):
+        token = request.cookies['Authorization'].split(" ")[1]
+        
+        try: data = jwt.decode(token, app.config['SECRET_KEY'])
+        except Exception as e: return f"Error: {e}", 403
+    
+    # Validate session based on authenticated user id from token
+    if not (data['id'] in sessions): return redirect("login"), 403
 
-    return redirect("/login", code=302)
-            
+    # Valid request, purge session and redirect
+    sessions.remove(data['id'])
+    return redirect("login"), 302
 
 @app.route('/dashboard', methods=["GET"])
 @require_user
 @limiter.limit(None)
-def dashboard(): return render_template('dashboard.html', count = len(honeypots), honeypots = honeypots)
+def dashboard(jwt_data): return render_template('dashboard.html', count = len(honeypots), honeypots = honeypots, jwt_name = jwt_data['name'])
 
 @app.route('/profiler', methods=["GET"])
 @require_user
 @limiter.limit(None)
-def profiler(): return render_template('profiler.html')
-
-@app.route('/statistics', methods=["GET"])
-@require_user
-@limiter.limit(None)
-def statistics(): return redirect("stats", code=302)
+def profiler(jwt_data): return render_template('profiler.html', jwt_name = jwt_data['name'])
 
 @app.route('/stats', methods=["GET"])
 @require_user
 @limiter.limit(None)
-def stats(): return render_template('stats.html')
+def stats(jwt_data): return render_template('stats.html', jwt_name = jwt_data['name'])
 
 @app.route('/about', methods=["GET"])
-@require_user
 @limiter.limit(None)
-def about(): return render_template('about-auth.html')
+def about():
+    token, data = None, None
+    
+    # Retrieve and decode token, else error
+    if ("Authorization" in request.cookies):
+        token = request.cookies['Authorization'].split(" ")[1]
+        
+        try: data = jwt.decode(token, app.config['SECRET_KEY'])
+        except Exception as e: return f"Error: {e}", 403
+
+    else: return render_template('about.html', jwt_name = "")
+
+    # Validate session based on authenticated user id from token
+    if not (data['id'] in sessions):
+        return render_template('about.html', jwt_name = "")
+
+    # Deliver the page as authenticated
+    return render_template('about.html', jwt_name = data['name'])
 
 
 # Dynamic routes for assets
@@ -134,9 +167,6 @@ def about(): return render_template('about-auth.html')
 @limiter.limit(None)
 def send_report(path):
     return send_from_directory('static', path)
-
-
-
 
 
 # API router (in development)
@@ -160,7 +190,7 @@ test_data = {
         'os': 'Ubuntu 20.04',
         'owner': 12345,
         'updated': 1651953237,
-        'health': 1
+        'health': 3
     },
     '0ooQzs78Aizu': {
         'type': 'Database',
@@ -193,7 +223,7 @@ test_data = {
 @app.route('/api/v1/honeypots', methods=["GET"])
 @require_user
 @limiter.limit("120/minute;1200/hour", override_defaults=True)
-def api_v1_honeypots(): return jsonify(test_data)
+def api_v1_honeypots(jwt_data): return jsonify(test_data)
 
 
 if __name__ == '__main__': app.run()
