@@ -33,7 +33,7 @@ def ingest_users(users_file:str, app:object) -> None:
             users_file = yaml.safe_load(fio)
 
             for id, attributes in zip(users_file['users'],
-                                  users_file['users'].values()):
+                                      users_file['users'].values()):
                 users.append(
                     User(id = id,
                         username = attributes['username'],
@@ -44,8 +44,11 @@ def ingest_users(users_file:str, app:object) -> None:
                         last = attributes['last'],
                         phone = attributes['phone']
                 ))
+        except AttributeError as e:
+            print(f"No users read from disk!")
 
         except yaml.YAMLError as e:
             print(f"Error {e}")
+            
             
     return users
