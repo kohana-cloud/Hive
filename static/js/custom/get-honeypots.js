@@ -262,7 +262,6 @@ function registerCardHover() {
         );
 
         $("#card-new").off('click').on('click', function() {
-            console.log('clicked');
             $("#createHoneypot").modal('show');
         });
 
