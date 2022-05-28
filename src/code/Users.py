@@ -8,7 +8,7 @@ class User():
         self.username = username
         self.email = email
         self.pwhash_salted = pwhash_salted
-        self.administrator = admin
+        self.admin = admin
         self.first = first
         self.last = last
         self.phone = phone
@@ -16,12 +16,12 @@ class User():
     def check_password(self, password:str) -> None:
         return bcrypt.checkpw(password.encode('ascii'), self.pwhash_salted.encode('ascii'))
 
-    def generate_pwhash(self, password:str) -> None:
-        return bcrypt.hashpw(password.encode('ascii'), 
-            bcrypt.gensalt(self.app.config['BCRYPT_ROUNDS']))
+def generate_pwhash(password:str, bcrypt_rounds:int) -> None:
+    return bcrypt.hashpw(password.encode('ascii'), 
+        bcrypt.gensalt(bcrypt_rounds)).decode('ascii')
 
 
-def ingest_users(users_file:str, app:object) -> None:
+def ingest_users(users_file:str) -> None:
     users = []
 
     if not (exists(users_file)):
@@ -50,5 +50,39 @@ def ingest_users(users_file:str, app:object) -> None:
         except yaml.YAMLError as e:
             print(f"Error {e}")
             
-            
     return users
+
+
+def append_user(users_file:str, user:User) -> bool:
+    users = ingest_users(users_file)
+
+    # Cannot append at declaration, see: https://stackoverflow.com/questions/16935381/appending-an-item-to-a-python-list-in-the-declaration-statement-list-append
+    users.append(user)
+
+    with open(users_file, "tw") as fio:
+        try:
+            user_write = \
+            { "users": 
+                { user.id :
+                    {
+                        "username": user.username,
+                        "email": user.email,
+                        "pwhash_salted": user.pwhash_salted,
+                        "admin": False,
+                        "first": user.first,
+                        "last": user.last,
+                        "phone": user.phone
+                    } for user in users
+                } 
+            }
+
+            yaml.safe_dump(user_write, fio)
+
+            return True
+
+        except yaml.YAMLError as e:
+            print(f"Error {e}")
+
+            return False
+
+    return False

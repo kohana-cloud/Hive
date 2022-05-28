@@ -2,9 +2,9 @@ from flask import Flask, render_template, redirect, send_from_directory, jsonify
 from flask_limiter.util import get_remote_address
 from flask_limiter import Limiter
 from src.code.Honeypots import ingest_honeypots
-from src.code.Users import ingest_users
+from src.code.Users import User, ingest_users, append_user, generate_pwhash
 from functools import wraps
-import secrets, os, jwt, datetime, time
+import secrets, os, jwt, datetime, uuid
 from flask_wtf.csrf import CSRFProtect
 from flask_wtf.csrf import CSRFError
 
@@ -13,6 +13,7 @@ app = Flask(__name__, template_folder = os.path.abspath('src/pages'))
 app.config['SECRET_KEY'] = str(secrets.randbits(256))
 app.config['LOGINEXP_MINS'] = 30
 app.config['BCRYPT_ROUNDS'] = 10
+app.config['USER_CONFIG'] = "data/users.yaml"
 
 limiter = Limiter(app, key_func = get_remote_address, default_limits=["20/minute", "200/hour"])
 @app.errorhandler(429)
@@ -25,8 +26,8 @@ csrf = CSRFProtect(app)
 def handle_csrf_error(e):
     return render_template('csrf_error.html', jwt_name = ""), 403
 
-users = ingest_users('data/users.yaml', app)
-honeypots = ingest_honeypots("data/honeypots.yaml")
+app.config['USERS'] = ingest_users(app.config['USER_CONFIG'])
+app.config['HONEYPOTS'] = ingest_honeypots("data/honeypots.yaml")
 sessions = []
 
 
@@ -44,7 +45,7 @@ def require_user(f):
         if ("Authentication" in request.cookies):
             token = request.cookies['Authentication'].split(" ")[1]
             
-            try: data = jwt.decode(token, app.config['SECRET_KEY'])
+            try: data = jwt.decode(token, app.config['SECRET_KEY'], "HS256")
             except Exception as e: return f"Error: {e}", 403
 
         else: return redirect("login"), 302
@@ -78,14 +79,15 @@ def login():
 
     # Receive and validate credentials
     if (request.method == "POST"):
-        # Get the first user where username or email matches, validate pw
+        # Get the first user where username or email matches
         try:
-            user = [ user for user in users if
+            user = [ user for user in app.config['USERS'] if
                 (user.username == request.form['username']) or
                 (user.email == request.form['username']) ][0]
         except IndexError:
             return render_template('login.html', invalid=True), 401
 
+        # Validate Password
         if not (user.check_password(request.form['password'])):
             return render_template('login.html', invalid=True), 401
             
@@ -105,7 +107,8 @@ def login():
             }, app.config['SECRET_KEY'], "HS256")
 
         # Build bearer
-        bearer = f"Bearer {token.decode('utf-8')}"
+        print(token)
+        bearer = f"Bearer {token}"
 
         # Respond
         rsp = redirect("/", 302)
@@ -122,7 +125,7 @@ def logout(jwt_data):
     if ("Authentication" in request.cookies):
         token = request.cookies['Authentication'].split(" ")[1]
         
-        try: data = jwt.decode(token, app.config['SECRET_KEY'])
+        try: data = jwt.decode(token, app.config['SECRET_KEY'], "HS256")
         except Exception as e: return f"Error: {e}", 403
     
     # Validate session based on authenticated user id from token
@@ -132,10 +135,29 @@ def logout(jwt_data):
     sessions.remove(data['id'])
     return redirect("login"), 302
 
+@app.route('/adduser', methods=["POST"])
+@limiter.limit(None)
+def add_user():
+    append_user(app.config['USER_CONFIG'], User(
+        id = str(uuid.uuid1()),
+        admin = False,
+        username = request.form['user'],
+        email = request.form['email'],
+        pwhash_salted = generate_pwhash(request.form['password'], app.config['BCRYPT_ROUNDS']),
+        first = request.form['firstname'],
+        last = request.form['lastname'],
+        phone = request.form['phone']
+        ))
+
+    # Update users in memory after append
+    app.config['USERS'] = ingest_users(app.config['USER_CONFIG'])
+
+    return redirect("login"), 302
+
 @app.route('/dashboard', methods=["GET"])
 @require_user
 @limiter.limit(None)
-def dashboard(jwt_data): return render_template('dashboard.html', count = len(honeypots), honeypots = honeypots, jwt_name = jwt_data['name'])
+def dashboard(jwt_data): return render_template('dashboard.html', count = len(app.config['HONEYPOTS']), honeypots = app.config['HONEYPOTS'], jwt_name = jwt_data['name'])
 
 @app.route('/profiler', methods=["GET"])
 @require_user
@@ -156,7 +178,7 @@ def about():
     if ("Authentication" in request.cookies):
         token = request.cookies['Authentication'].split(" ")[1]
         
-        try: data = jwt.decode(token, app.config['SECRET_KEY'])
+        try: data = jwt.decode(token, app.config['SECRET_KEY'], "HS256")
         except Exception as e: return f"Error: {e}", 403
 
     else: return render_template('about.html', jwt_name = "")
