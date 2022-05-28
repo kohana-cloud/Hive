@@ -135,6 +135,7 @@ def logout(jwt_data):
     sessions.remove(data['id'])
     return redirect("login"), 302
 
+# TODO Need to actually add all the validation/RBAC stuff - Nate (nathaniel@singer.cloud)
 @app.route('/adduser', methods=["POST"])
 @limiter.limit(None)
 def add_user():
@@ -143,7 +144,8 @@ def add_user():
         admin = False,
         username = request.form['user'],
         email = request.form['email'],
-        pwhash_salted = generate_pwhash(request.form['password'], app.config['BCRYPT_ROUNDS']),
+        pwhash_salted = generate_pwhash(
+            request.form['password'], app.config['BCRYPT_ROUNDS']),
         first = request.form['firstname'],
         last = request.form['lastname'],
         phone = request.form['phone']

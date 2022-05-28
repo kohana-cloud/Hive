@@ -3,7 +3,7 @@ var jsonData = null;
 
 function cardTemplate(id, attributes) {
     return `
-    <div id="card-${id}" class="card" style="padding: 0; margin: 20px; width: 200px; background-color: rgb(252, 252, 252);"></div>`
+    <card id="card-${id}" class="card" style="padding: 0; margin: 20px; width: 200px; background-color: rgb(252, 252, 252);"></card>`
 }
 
 function cardHeaderTemplate(id, attributes) {
@@ -77,13 +77,6 @@ function cardBodyTemplate(id, attributes) {
     </div>`
 }
 
-function cardRenderNew() {
-    return `
-    <div id="card-new" class="card" style="padding: 0; margin: 20px; width: 200px; background-color: rgb(252, 252, 252);">
-        <img id="card-new-img" src="static/graphics/endpoint-images/plus-dotted.svg" height=100 class="width: max-content; card-img-top" style="position: absolute; top: 50%; -ms-transform: translateY(-50%);transform: translateY(-50%);"/>
-    </div>`
-}
-
 function cardFooterTemplate(id, attributes) {
     
     switch (attributes.health) {
@@ -113,6 +106,13 @@ function cardFooterTemplate(id, attributes) {
     <div id="card-footer-${id}" class="card-footer text-muted" style="text-align: center; color: ${footerTextColor}; background-color: ${footerBackgroundColor};">
         ${footerText}
     </div>`;
+}
+
+function cardRenderNew() {
+    return `
+    <card id="card-new" class="card" style="padding: 0; margin: 20px; width: 200px; background-color: rgb(252, 252, 252);">
+        <img id="card-new-img" src="static/graphics/endpoint-images/plus-dotted.svg" height=100 class="width: max-content; card-img-top" style="position: absolute; top: 50%; -ms-transform: translateY(-50%);transform: translateY(-50%);"/>
+    </card>`
 }
 
 
@@ -149,6 +149,7 @@ function updateAllCards() {
     let cardContainer = document.getElementById("card-container");
     cardContainer.style.justifyContent = "center";
 }
+
 
 // Generate HTML from JSON and render
 function updateCardFooters() {
@@ -211,7 +212,6 @@ function updateDate() {
     updateCardFooters();
 } var run = setInterval(updateDate, 1000);
 
-
 var flashOn = false;
 function flashLive() {
     var d = new Date()
@@ -228,7 +228,7 @@ function flashLive() {
                 document.getElementById("card-" + id).style.border = "1px solid rgba(0, 0, 0, 0.125)";
                 document.getElementById("card-" + id).style["boxShadow"] = null
 
-                document.title = "The Hive 🔴"
+                document.title = "The Hive  🔴"
             } else {
                 document.getElementById("card-" + id).style.border = "1px solid red";
                 document.getElementById("card-" + id).style["boxShadow"] = "0 0 5px red";
@@ -247,3 +247,37 @@ function flashLive() {
     }
     
 } var run = setInterval(flashLive, 250);
+
+// Hover if element exists
+function registerCardHover() {
+    if (document.getElementById('card-new')) {
+        $("#card-new").hover(
+            function() {
+                document.getElementById("card-new").style.border = "1px solid rgba(0, 0, 0, 0.5)";
+                document.getElementById("card-new").style["boxShadow"] = "0 0 5px grey";
+            }, function() {
+                document.getElementById("card-new").style.border = null;
+                document.getElementById("card-new").style["boxShadow"] = null;
+            }
+        );
+
+        $("#card-new").off('click').on('click', function() {
+            console.log('clicked');
+            $("#createHoneypot").modal('show');
+        });
+
+        
+    }
+
+    if (document.getElementById('card-new-img')) {
+        $("#card-new").hover(
+            function() {
+                document.getElementById("card-new").style.backgroundColor = "rgba(240,240,240)";
+            }, function() {
+                document.getElementById("card-new").style.backgroundColor = "rgba(252,252,252)";
+            }
+        );
+    }
+
+    
+} var run = setInterval(registerCardHover, 5);

@@ -2,6 +2,16 @@
 
 {% block content %}
 
+<!-- acquire jquery-->
+<script type="text/javascript" language="javascript" src="static/js/bundles/jquery-3.6.0.min.js"></script>
+
+<!-- acquire bootstrap-->
+<script src="static/js/bundles/bootstrap.min.js"></script>
+
+<!-- Bootstrap core CSS -->
+<link href="static/css/bootstrap.min.css" rel="stylesheet">
+
+
 <div id="sortbar" class="card" style="margin: auto; width: 750px; background-color: rgb(252, 252, 252); margin-top: 20px;">
   <div class="dropdown">
     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -15,11 +25,71 @@
   </div>
 </div>
 
+<!-- create honeypot -->
+<modal class="modal fade" id="createHoneypot" tabindex="-1" role="dialog" aria-labelledby="modalCreateHoneypot" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <!-- header -->
+      <div class="modal-header" style="background-color: rgba(0,0,0,.03)">
+        <h5 class="modal-title" style="display: block; margin-left: 165px;">New Honeypot</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- content -->
+      <div class="modal-body">
+        <div class="row" style="margin-bottom: 50px;"> 
+          <div class="col-auto" style="margin: auto; padding: 10px;
+              background-color: rgb(225, 225, 225); border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
+            <img src="static/graphics/endpoint-images/db-fill.svg" width="100" height="100" alt="first name">
+          </div>
+          <div class="col-auto" style="margin: auto; padding: 10px;
+              background-color: rgb(225, 225, 225); border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
+            <img src="static/graphics/endpoint-images/nas-fill.svg" width="100" height="100" alt="first name">
+          </div>
+          <div class="col-auto" style="margin: auto; padding: 10px;
+              background-color: rgb(225, 225, 225); border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
+            <img src="static/graphics/endpoint-images/vps-fill.svg" width="100" height="100" alt="first name">
+          </div>
+        </div>
+        <div class="row" style="margin-bottom: 50px;"> 
+          <div class="col-auto" style="margin: auto; padding: 10px;
+              background-color: rgb(225, 225, 225); border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
+            <img src="static/graphics/endpoint-images/nas-fill.svg" width="100" height="100" alt="first name">
+          </div>
+          <div class="col-auto" style="margin: auto; padding: 10px;
+              background-color: rgb(225, 225, 225); border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
+            <img src="static/graphics/endpoint-images/nas-fill.svg" width="100" height="100" alt="first name">
+          </div>
+          <div class="col-auto" style="margin: auto; padding: 10px;
+              background-color: rgb(225, 225, 225); border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
+            <img src="static/graphics/endpoint-images/vps-fill.svg" width="100" height="100" alt="first name">
+          </div>
+        </div>
+        <div class="row"> 
+          <div class="col-auto" style="margin: auto; padding: 10px;
+              background-color: rgb(225, 225, 225); border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
+            <img src="static/graphics/endpoint-images/db-fill.svg" width="100" height="100" alt="first name">
+          </div>
+          <div class="col-auto" style="margin: auto; padding: 10px;
+              background-color: rgb(225, 225, 225); border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
+            <img src="static/graphics/endpoint-images/vps-fill.svg" width="100" height="100" alt="first name">
+          </div>
+          <div class="col-auto" style="margin: auto; padding: 10px;
+              background-color: rgb(225, 225, 225); border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
+            <img src="static/graphics/endpoint-images/nas-fill.svg" width="100" height="100" alt="first name">
+          </div>
+        </div>
+      </div>
+
+      <!-- footer -->
+      <div class="modal-footer" style="background-color: rgba(0,0,0,.03);"></div>
+
+    </div>
+  </div>
+</modal>
 
 <div id="card-container" class="row">
-  <!-- acquire jquery-->
-  <script type="text/javascript" language="javascript" src="static/js/bundles/jquery-3.6.0.min.js"></script>
-  
   <!-- build cards-->
   <script type="text/javascript" language="javascript" src="static/js/custom/get-honeypots.js"></script>
 </div>
