@@ -110,7 +110,7 @@ function cardFooterTemplate(id, attributes) {
 
 function cardRenderNew() {
     return `
-    <card id="card-new" class="card" style="padding: 0; margin: 20px; width: 200px; background-color: rgb(252, 252, 252);">
+    <card id="card-new" class="card" style="min-height: 425px; padding: 0; margin: 20px; width: 200px; background-color: rgb(252, 252, 252);">
         <img id="card-new-img" src="static/graphics/endpoint-images/plus-dotted.svg" height=100 class="width: max-content; card-img-top" style="position: absolute; top: 50%; -ms-transform: translateY(-50%);transform: translateY(-50%);"/>
     </card>`
 }
@@ -248,35 +248,78 @@ function flashLive() {
     
 } var run = setInterval(flashLive, 250);
 
+
+function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+  }
+
 // Hover if element exists
 function registerCardHover() {
     if (document.getElementById('card-new')) {
-        $("#card-new").hover(
+        $("card").hover(
             function() {
-                document.getElementById("card-new").style.border = "1px solid rgba(0, 0, 0, 0.5)";
-                document.getElementById("card-new").style["boxShadow"] = "0 0 5px grey";
+                this.style.border = "1px solid rgba(0, 0, 0, 0.5)";
+                this.style["boxShadow"] = "0 0 5px grey";
             }, function() {
-                document.getElementById("card-new").style.border = null;
-                document.getElementById("card-new").style["boxShadow"] = null;
+                this.style.border = null;
+                this.style["boxShadow"] = null;
             }
         );
 
         $("#card-new").off('click').on('click', function() {
             $("#createHoneypot").modal('show');
         });
-
-        
     }
 
     if (document.getElementById('card-new-img')) {
         $("#card-new").hover(
             function() {
-                document.getElementById("card-new").style.backgroundColor = "rgba(240,240,240)";
+                this.style.backgroundColor = "rgba(240,240,240)";
             }, function() {
-                document.getElementById("card-new").style.backgroundColor = "rgba(252,252,252)";
+                this.style.backgroundColor = "rgba(252,252,252)";
             }
         );
     }
 
-    
-} var run = setInterval(registerCardHover, 5);
+    //need to update the column arangement so it doesnt move when borders change
+    if (document.getElementById('hpicon-vps')) {
+        $("hpicon").hover(
+            function() {
+                this.style.border = "1px solid rgba(0, 0, 0, 0.5)";
+                this.style["boxShadow"] = "0 0 5px grey";
+            }, function() {
+                this.style.border = null;
+                this.style["boxShadow"] = null;
+            }
+        );
+
+        $("#hpicon-vps").off('click').on('click', async function() {
+            //if we want to protect CSRF here we need to set that up, currently excluded
+
+            $.ajax({
+                url: '/api/v1/honeypots',
+                type: 'post',
+            });
+
+            $("#createHoneypot").modal('hide');
+
+            console.log('sleeping')
+            await delay(1000);
+            console.log('awake')
+
+            // Get JSON from server
+            $.getJSON("api/v1/honeypots", function(data) {
+                jsonData = data;
+            });
+            
+            console.log('sleeping')
+            await delay(1000);
+            console.log('awake')
+
+            console.log(jsonData)
+            updateAllCards();
+            updateCardFooters();
+        });
+    }
+   
+} var run = setInterval(registerCardHover, 500);

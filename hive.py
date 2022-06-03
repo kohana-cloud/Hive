@@ -1,12 +1,15 @@
+from hashlib import new
 from flask import Flask, render_template, redirect, send_from_directory, jsonify, request, Response
 from flask_limiter.util import get_remote_address
 from flask_limiter import Limiter
 from src.code.Honeypots import ingest_honeypots
 from src.code.Users import User, ingest_users, append_user, generate_pwhash
 from functools import wraps
+from src.code.gRPC.requests import query_for_honeypots, new_honeypot
 import secrets, os, jwt, datetime, uuid
 from flask_wtf.csrf import CSRFProtect
 from flask_wtf.csrf import CSRFError
+import time
 
 
 app = Flask(__name__, template_folder = os.path.abspath('src/pages'))
@@ -27,7 +30,8 @@ def handle_csrf_error(e):
     return render_template('csrf_error.html', jwt_name = ""), 403
 
 app.config['USERS'] = ingest_users(app.config['USER_CONFIG'])
-app.config['HONEYPOTS'] = ingest_honeypots("data/honeypots.yaml")
+#app.config['HONEYPOTS'] = ingest_honeypots("data/honeypots.yaml")
+app.config['HONEYPOTS'] = query_for_honeypots()
 sessions = []
 
 
@@ -201,60 +205,19 @@ def send_report(path):
 
 
 # API router (in development)
-test_data = {
-    '1Cbas2ZWQ8Kq': {
-        'type': 'VPS',
-        'os': 'Ubuntu 20.04',
-        'owner': 12345,
-        'updated': 1652508781,
-        'health': 0
-    },
-    'w8w5t32JFMzT': {
-        'type': 'VPS',
-        'os': 'Ubuntu 20.04',
-        'owner': 12345,
-        'updated': 1651233737,
-        'health': 1
-    },
-    'hFc8c7Hhr8wj': {
-        'type': 'Database',
-        'os': 'Ubuntu 20.04',
-        'owner': 12345,
-        'updated': 1651953237,
-        'health': 3
-    },
-    '0ooQzs78Aizu': {
-        'type': 'Database',
-        'db-engine': 'mysql',
-        'owner': 12345,
-        'updated': 1651993737,
-        'health': 0
-    },
-    '0SK8zO8VB8Wj': {
-        'type': 'NAS',
-        'owner': 12345,
-        'updated': 1651123437,
-        'health': 3
-    },
-    'qVAUYY6C67tv': {
-        'type': 'Database',
-        'db-engine': 'mysql',
-        'owner': 12345,
-        'updated': 1651933123,
-        'health': 2
-    },
-    'yCdPU4EtIk33': {
-        'type': 'NAS',
-        'owner': 12345,
-        'updated': 1652507693,
-        'health': 0
-    }
-}
-
-@app.route('/api/v1/honeypots', methods=["GET"])
+@csrf.exempt
+@app.route('/api/v1/honeypots', methods=["GET", "POST"])
 @require_user
 @limiter.limit("120/minute;1200/hour", override_defaults=True)
-def api_v1_honeypots(jwt_data): return jsonify(test_data)
+def api_v1_honeypots(jwt_data):
+    if (request.method == "GET"):
+        return jsonify(app.config['HONEYPOTS'])
+    elif (request.method == "POST"):
+        new_honeypot()
+        time.sleep(0.5)
+        app.config['HONEYPOTS'] = query_for_honeypots()
+
+        return 'success', 200
 
 
 if __name__ == '__main__': app.run()
