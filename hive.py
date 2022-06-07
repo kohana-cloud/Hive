@@ -11,6 +11,10 @@ from flask_wtf.csrf import CSRFProtect
 from flask_wtf.csrf import CSRFError
 import time
 
+HIVE_VERSION = "0.1b"
+JQUERY_VERSION = "3.6.0"
+BOOTSTRAP_VERSION = "5.1.3"
+
 
 app = Flask(__name__, template_folder = os.path.abspath('src/pages'))
 app.config['SECRET_KEY'] = str(secrets.randbits(256))
@@ -187,14 +191,16 @@ def about():
         try: data = jwt.decode(token, app.config['SECRET_KEY'], "HS256")
         except Exception as e: return f"Error: {e}", 403
 
-    else: return render_template('about.html', jwt_name = "")
+    else: return render_template('about.html', jwt_name = "",
+        hive_v=HIVE_VERSION, jquery_v=JQUERY_VERSION, bootstrap_v=BOOTSTRAP_VERSION)
 
     # Validate session based on authenticated user id from token
-    if not (data['id'] in sessions):
-        return render_template('about.html', jwt_name = "")
+    if not (data['id'] in sessions): return render_template('about.html', jwt_name = "",
+        hive_v=HIVE_VERSION, jquery_v=JQUERY_VERSION, bootstrap_v=BOOTSTRAP_VERSION)
 
     # Deliver the page as authenticated
-    return render_template('about.html', jwt_name = data['name'])
+    return render_template('about.html', jwt_name = data['name'],
+        hive_v=HIVE_VERSION, jquery_v=JQUERY_VERSION, bootstrap_v=BOOTSTRAP_VERSION)
 
 
 # Dynamic routes for assets

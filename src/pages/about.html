@@ -1,9 +1,26 @@
 {% extends 'templates/base.html' %}
 
 {% block content %}
-    <p>about TODO</p>
 
-    {% if jwt_name != "" %}
-    <p>authenticated TODO</p>
-    {% endif %}
+<h4 style="text-align:center; margin-top: 25px;">Attribution</h4>
+<div style="text-align: justify; width: 450px; margin: auto">
+    <p><b>Hive</b> is the frontend web application used for managing and deploying honeypots in a target network. Hive is a component of the broader Kohana honeypot framework developed by a team from the University of California, Berkeley in 2022.</p>
+    <div style="display:block; margin:auto; width: 130px; padding-left: 25px;">
+        <li>Sujith Dhati</li>
+        <li>Laura Haddad</li>
+        <li>Emma Rochon</li>
+        <li>Ismail Kably</li>
+        <li>Nate Singer</li>
+    </div>
+</div>
+
+{% if jwt_name != "" %}
+<h4 style="text-align:center; margin-top: 40px;">Version Information</h4>
+<div style="text-align: center;">
+Hive v{{hive_v}}<br>
+jQuery v{{jquery_v}}<br>
+Bootstrap v{{bootstrap_v}}<br>
+</div>
+{% endif %}
+
 {% endblock %}
