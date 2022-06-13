@@ -52,6 +52,8 @@ def require_user(f):
         # Retrieve and decode token, else error
         if ("Authentication" in request.cookies):
             token = request.cookies['Authentication'].split(" ")[1]
+
+            print(f"Token: '{token}'")
             
             try: data = jwt.decode(token, app.config['SECRET_KEY'], "HS256")
             except Exception as e: return f"Error: {e}", 403
@@ -116,7 +118,7 @@ def login():
 
         # Build bearer
         print(token)
-        bearer = f"Bearer {token}"
+        bearer = f"Bearer {token.decode('ascii')}"
 
         # Respond
         rsp = redirect("/", 302)
