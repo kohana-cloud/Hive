@@ -38,17 +38,41 @@ function cardHeaderTemplate(id, attributes) {
 
 function cardBodyTemplate(id, attributes) {
     switch (attributes.type) {
-        case "VPS":
-            var cardGraphic = "vps-fill.svg";
-            var cardTitle = "VPS";
+        case "EC2":
+            var cardGraphic = "ec2_grey.svg";
+            var cardTitle = "EC2 Compute";
             break;
-        case "Database":
-            var cardGraphic = "db-fill.svg";
-            var cardTitle = "DB";
+        case "BOTTLEROCKET":
+            var cardGraphic = "bottlerocket_grey.svg";
+            var cardTitle = "Bottlerocket";
             break;
-        case "NAS":
-            var cardGraphic = "nas-fill.svg";
-            var cardTitle = "NAS";
+        case "ECS":
+            var cardGraphic = "ecs_grey.svg";
+            var cardTitle = "ECS Container";
+            break;
+        case "FROST":
+            var cardGraphic = "thinkbox_frost_grey.svg";
+            var cardTitle = "Thinkbox Frost";
+            break;
+        case "LAMBDA":
+            var cardGraphic = "lambda_grey.svg";
+            var cardTitle = "Lambda";
+            break;
+        case "DEADLINE":
+            var cardGraphic = "thinkbox_deadline_grey.svg";
+            var cardTitle = "Thinkbox Deadline";
+            break;
+        case "OUTPOST":
+            var cardGraphic = "outpost_grey.svg";
+            var cardTitle = "Outpost";
+            break;
+        case "PARALLEL":
+            var cardGraphic = "parallel_grey.svg";
+            var cardTitle = "Parallel";
+            break;
+        case "SERVERLESS":
+            var cardGraphic = "serverless_grey.svg";
+            var cardTitle = "Serverless";
             break;
     }
 
@@ -58,7 +82,7 @@ function cardBodyTemplate(id, attributes) {
     
     return `
     <div id="card-body-${id}" class="card-body">
-        <img src="static/graphics/endpoint-images/${cardGraphic}" height=75 class="card-img-top">
+        <img src="static/graphics/endpoint-images/${cardGraphic}" height=75 style="display: block; margin:auto; border-radius:15px;">
         <h5 class="card-title" style=" text-align: center; margin-top: 10px;">${cardTitle}</h5>
         <h6 class="card-subtitle mb-2 text-muted" style="text-align: center;">${id}</h6>
 
@@ -185,6 +209,8 @@ function updateCardFooters() {
             finalText = `${seconds} seconds ago`
         }
 
+        //This bug is due to not having up to date context, need to revise this all, will likely do it when i do the sorting
+
         // Render card HTML
         document.getElementById("card-footer-" + hpId).textContent = finalText;
     });
@@ -282,34 +308,144 @@ function registerCardHover() {
     }
 
     //need to update the column arangement so it doesnt move when borders change
-    if (document.getElementById('hpicon-vps')) {
-        $("#hpicon-vps").off('click').on('click', async function() {
+    if (document.getElementById('hp-ec2')) {
+        $("#hp-ec2").off('click').on('click', async function() {
             //if we want to protect CSRF here we need to set that up, currently excluded
-
-            $.ajax({
-                url: '/api/v1/honeypots',
-                type: 'post',
-            });
+            $.post('/api/v1/honeypots', { type: 'ec2' });
 
             $("#createHoneypot").modal('hide');
-
-            console.log('sleeping')
             await delay(1000);
-            console.log('awake')
+            newhp = true;
 
             // Get JSON from server
-            $.getJSON("api/v1/honeypots", function(data) {
-                jsonData = data;
-            });
-            
-            console.log('sleeping')
-            await delay(1000);
-            console.log('awake')
+            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
+            await delay(1000); 
 
-            console.log(jsonData)
+            updateAllCards();
+            updateCardFooters();
+        });
+        
+        $("#hp-bottlerocket").off('click').on('click', async function() {
+            //if we want to protect CSRF here we need to set that up, currently excluded
+            $.post('/api/v1/honeypots', { type: 'bottlerocket' });
+            $("#createHoneypot").modal('hide');
+            await delay(1000);
+            newhp = true;
+
+            // Get JSON from server
+            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
+            await delay(1000); 
+
+            updateAllCards();
+            updateCardFooters();
+        });
+        
+        $("#hp-ecs").off('click').on('click', async function() {
+            //if we want to protect CSRF here we need to set that up, currently excluded
+            $.post('/api/v1/honeypots', { type: 'ecs' });
+            $("#createHoneypot").modal('hide');
+            await delay(1000);
+            newhp = true;
+
+            // Get JSON from server
+            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
+            await delay(1000); 
+
+            updateAllCards();
+            updateCardFooters();
+        });
+
+        $("#hp-frost").off('click').on('click', async function() {
+            //if we want to protect CSRF here we need to set that up, currently excluded
+            $.post('/api/v1/honeypots', { type: 'frost' });
+            $("#createHoneypot").modal('hide');
+            await delay(1000);
+            newhp = true;
+
+            // Get JSON from server
+            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
+            await delay(1000); 
+
+            updateAllCards();
+            updateCardFooters();
+        });
+
+        $("#hp-lambda").off('click').on('click', async function() {
+            //if we want to protect CSRF here we need to set that up, currently excluded
+            $.post('/api/v1/honeypots', { type: 'lambda' });
+            $("#createHoneypot").modal('hide');
+            await delay(1000);
+            newhp = true;
+
+            // Get JSON from server
+            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
+            await delay(1000); 
+
+            updateAllCards();
+            updateCardFooters();
+        });
+
+        $("#hp-deadline").off('click').on('click', async function() {
+            //if we want to protect CSRF here we need to set that up, currently excluded
+            $.post('/api/v1/honeypots', { type: 'deadline' });
+            $("#createHoneypot").modal('hide');
+            await delay(1000);
+            newhp = true;
+
+            // Get JSON from server
+            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
+            await delay(1000); 
+
+            updateAllCards();
+            updateCardFooters();
+        });
+
+        $("#hp-outpost").off('click').on('click', async function() {
+            //if we want to protect CSRF here we need to set that up, currently excluded
+            $.post('/api/v1/honeypots', { type: 'outpost' });
+            $("#createHoneypot").modal('hide');
+            await delay(1000);
+            newhp = true;
+
+            // Get JSON from server
+            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
+            await delay(1000); 
+
+            updateAllCards();
+            updateCardFooters();
+        });
+
+        $("#hp-parallel").off('click').on('click', async function() {
+            //if we want to protect CSRF here we need to set that up, currently excluded
+            $.post('/api/v1/honeypots', { type: 'parallel' });
+            $("#createHoneypot").modal('hide');
+            await delay(1000);
+            newhp = true;
+
+            // Get JSON from server
+            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
+            await delay(1000); 
+
+            updateAllCards();
+            updateCardFooters();
+        });
+
+        $("#hp-serverless").off('click').on('click', async function() {
+            //if we want to protect CSRF here we need to set that up, currently excluded
+            $.post('/api/v1/honeypots', { type: 'serverless' });
+            $("#createHoneypot").modal('hide');
+            await delay(1000);
+            newhp = true;
+
+            // Get JSON from server
+            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
+            await delay(1000); 
+
             updateAllCards();
             updateCardFooters();
         });
     }
+
+    
    
 } var run = setInterval(registerCardHover, 500);

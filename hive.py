@@ -37,7 +37,6 @@ def handle_csrf_error(e):
     return render_template('csrf_error.html', jwt_name = ""), 403
 
 app.config['USERS'] = ingest_users(app.config['USER_CONFIG'])
-app.config['HONEYPOTS'] = query_for_honeypots()
 sessions = []
 
 
@@ -54,8 +53,6 @@ def require_user(f):
         # Retrieve and decode token, else error
         if ("Authentication" in request.cookies):
             token = request.cookies['Authentication'].split(" ")[1]
-
-            print(f"Token: '{token}'")
             
             try: data = jwt.decode(token, app.config['SECRET_KEY'], "HS256")
             except Exception as e: return f"Error: {e}", 403
@@ -171,7 +168,9 @@ def add_user():
 @app.route('/dashboard', methods=["GET"])
 @require_user
 @limiter.limit(None)
-def dashboard(jwt_data): return render_template('dashboard.html', count = len(app.config['HONEYPOTS']), honeypots = app.config['HONEYPOTS'], jwt_name = jwt_data['name'])
+def dashboard(jwt_data):
+    honeypots = query_for_honeypots()
+    return render_template('dashboard.html', count = len(honeypots), honeypots = honeypots, jwt_name = jwt_data['name'])
 
 @app.route('/profiler', methods=["GET"])
 @require_user
@@ -221,11 +220,11 @@ def send_report(path):
 @limiter.limit("120/minute;1200/hour", override_defaults=True)
 def api_v1_honeypots(jwt_data):
     if (request.method == "GET"):
-        return jsonify(app.config['HONEYPOTS'])
+        return jsonify(query_for_honeypots())
+
     elif (request.method == "POST"):
-        new_honeypot()
+        new_honeypot(type=request.form['type'])
         time.sleep(0.5)
-        app.config['HONEYPOTS'] = query_for_honeypots()
 
         return 'success', 200
 

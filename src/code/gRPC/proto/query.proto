@@ -5,7 +5,7 @@ message Empty {}
 
 service QueryServer {
     rpc GetHoneypots (Empty) returns (Honeypots);
-    rpc NewHoneypot (Honeypot) returns (ReturnCode);
+    rpc NewHoneypot (StartHoneypot) returns (ReturnCode);
 }
 
 message Honeypots {
@@ -15,6 +15,10 @@ message Honeypots {
 
 message Honeypot {
     string HoneypotsAsJSON = 1;
+}
+
+message StartHoneypot {
+    string type = 1;
 }
 
 message ReturnCode {

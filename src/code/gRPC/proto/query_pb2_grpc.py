@@ -21,7 +21,7 @@ class QueryServerStub(object):
                 )
         self.NewHoneypot = channel.unary_unary(
                 '/grpc.QueryServer/NewHoneypot',
-                request_serializer=query__pb2.Honeypot.SerializeToString,
+                request_serializer=query__pb2.StartHoneypot.SerializeToString,
                 response_deserializer=query__pb2.ReturnCode.FromString,
                 )
 
@@ -51,7 +51,7 @@ def add_QueryServerServicer_to_server(servicer, server):
             ),
             'NewHoneypot': grpc.unary_unary_rpc_method_handler(
                     servicer.NewHoneypot,
-                    request_deserializer=query__pb2.Honeypot.FromString,
+                    request_deserializer=query__pb2.StartHoneypot.FromString,
                     response_serializer=query__pb2.ReturnCode.SerializeToString,
             ),
     }
@@ -93,7 +93,7 @@ class QueryServer(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/grpc.QueryServer/NewHoneypot',
-            query__pb2.Honeypot.SerializeToString,
+            query__pb2.StartHoneypot.SerializeToString,
             query__pb2.ReturnCode.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
