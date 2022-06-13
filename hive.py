@@ -12,6 +12,7 @@ from src.code.Users import User, ingest_users, append_user, generate_pwhash
 from src.code.gRPC.requests import query_for_honeypots, new_honeypot
 
 
+## TODO Dynamic query for version information
 HIVE_VERSION = "0.1b"
 JQUERY_VERSION = "3.6.0"
 BOOTSTRAP_VERSION = "5.1.3"

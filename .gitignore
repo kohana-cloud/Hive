@@ -131,3 +131,4 @@ dmypy.json
 
 # Self Defined
 data/users.yaml
+cert/*
