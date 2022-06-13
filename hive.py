@@ -1,15 +1,16 @@
-from hashlib import new
 from flask import Flask, render_template, redirect, send_from_directory, jsonify, request, Response
 from flask_limiter.util import get_remote_address
 from flask_limiter import Limiter
-from src.code.Honeypots import ingest_honeypots
-from src.code.Users import User, ingest_users, append_user, generate_pwhash
+from flask_wtf.csrf import CSRFProtect, CSRFError
 from functools import wraps
-from src.code.gRPC.requests import query_for_honeypots, new_honeypot
+from hashlib import new
+
 import secrets, os, jwt, datetime, uuid
-from flask_wtf.csrf import CSRFProtect
-from flask_wtf.csrf import CSRFError
 import time
+
+from src.code.Users import User, ingest_users, append_user, generate_pwhash
+from src.code.gRPC.requests import query_for_honeypots, new_honeypot
+
 
 HIVE_VERSION = "0.1b"
 JQUERY_VERSION = "3.6.0"
@@ -21,6 +22,7 @@ app.config['SECRET_KEY'] = str(secrets.randbits(256))
 app.config['LOGINEXP_MINS'] = 30
 app.config['BCRYPT_ROUNDS'] = 10
 app.config['USER_CONFIG'] = "data/users.yaml"
+
 
 limiter = Limiter(app, key_func = get_remote_address, default_limits=["20/minute", "200/hour"])
 @app.errorhandler(429)
@@ -34,7 +36,6 @@ def handle_csrf_error(e):
     return render_template('csrf_error.html', jwt_name = ""), 403
 
 app.config['USERS'] = ingest_users(app.config['USER_CONFIG'])
-#app.config['HONEYPOTS'] = ingest_honeypots("data/honeypots.yaml")
 app.config['HONEYPOTS'] = query_for_honeypots()
 sessions = []
 
