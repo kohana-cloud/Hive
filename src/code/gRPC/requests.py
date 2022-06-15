@@ -23,8 +23,11 @@ class QueryClient(object):
     def get_honeypots(self):
         return self.stub.GetHoneypots(query.Empty())
     
-    def new_honeypot(self):
-        return self.stub.NewHoneypot(query.Honeypot())
+    def new_honeypot(self, type:str):
+        return self.stub.NewHoneypot(query.StartHoneypot(
+                type=type
+            ))
+
 
 def query_for_honeypots():
     client = QueryClient()
@@ -32,6 +35,7 @@ def query_for_honeypots():
 
     return json.loads(honeypots)
 
-def new_honeypot():
+
+def new_honeypot(type:str):
     client = QueryClient()
-    client.new_honeypot()
+    client.new_honeypot(type=type)
