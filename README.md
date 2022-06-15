@@ -8,4 +8,4 @@ Going to update this eventually, hopefully this is enough for now. - Nate
 ```$ pip3 install -r requirements.txt```
 
 ### Run Server
-```$ FLASK_APP=app.py FLASK_ENV=development flask run --port 5000 --host=0.0.0.0```
+```$ FLASK_APP=hive.py FLASK_ENV=development flask run --port 5000 --host=0.0.0.0```

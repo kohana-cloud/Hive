@@ -1,5 +1,108 @@
 {% extends 'templates/base.html' %}
 
 {% block content %}
-    <p>stats TODO</p>
+
+<!-- acquire bootstrap-->
+<script src="static/js/bundles/bootstrap.min.js"></script>
+
+<h5 style="text-align: center; margin-top: 15px;">Framework Health</h5>
+<div class="progress" style="height: 50px; margin-top: 15px;">
+    <div class="progress-bar bg-danger"  role="progressbar" style="width: 15%" aria-valuemin="0" aria-valuemax="100"><b>Compromised</b>3</div>
+    <div class="progress-bar bg-warning" role="progressbar" style="width: 10%" aria-valuemin="0" aria-valuemax="100"><b>Degraded</b>2</div>
+    <div class="progress-bar bg-success" role="progressbar" style="width: 75%" aria-valuemin="0" aria-valuemax="100"><b>Healthy</b>15</div>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 10px;">
+    <div class="box-stat vertical-center"><h1>23</h1>Containers</div>
+    <div class="box-stat vertical-center"><h1>2</h1>Attackers</div>
+    <div class="box-stat vertical-center"><h1>7</h1>Users</div>
+    <div class="box-stat vertical-center"><h1>5</h1>Threat Level</div>
+    <div class="box-stat vertical-center"><h1>3.2tb</h1>Target Traffic</div>
+</div>
+
+<hr>
+
+<h5 style="text-align: center; margin-top: 15px;">Orchestrator Logging</h5>
+<div class="console" style="margin-top: 15px;">
+    [2022-06-06 22:01:25.418773] QueryServer received gRPC call -- Retrieve Honeypots<br>
+    [2022-06-06 22:20:05.522149] QueryServer received gRPC call -- Retrieve Honeypots<br>
+    [2022-06-06 22:24:37.369957] QueryServer received gRPC call -- Retrieve Honeypots<br>
+    [2022-06-06 22:25:36.211946] QueryServer received gRPC call -- Retrieve Honeypots<br>
+    [2022-06-06 22:31:39.010627] QueryServer received gRPC call -- Retrieve Honeypots<br>
+    [2022-06-06 23:10:34.683145] QueryServer received gRPC call -- Retrieve Honeypots<br>
+    [2022-06-06 23:10:58.611024] QueryServer received gRPC call -- Retrieve Honeypots<br>
+    [2022-06-06 23:11:07.440929] QueryServer received gRPC call -- Retrieve Honeypots<br>
+    [2022-06-06 23:26:31.413046] QueryServer received gRPC call -- Retrieve Honeypots<br>
+    [2022-06-06 23:26:52.674794] QueryServer received gRPC call -- Retrieve Honeypots<br>
+    [2022-06-06 23:27:06.148129] QueryServer received gRPC call -- Retrieve Honeypots<br>
+    [2022-06-06 23:35:39.370397] QueryServer received gRPC call -- Retrieve Honeypots<br>
+    [2022-06-06 23:36:43.119599] QueryServer received gRPC call -- New Honeypot<br>
+    [2022-06-06 23:37:36.833597] QueryServer received gRPC call -- New Honeypot<br>
+    [2022-06-06 23:56:33.718073] QueryServer received gRPC call -- Retrieve Honeypots<br>
+    [2022-06-06 23:56:34.022283] QueryServer received gRPC call -- Retrieve Honeypots<br>
+    [2022-06-07 11:56:03.681780] QueryServer received gRPC call -- Retrieve Honeypots<br>
+</div>
+
+<div style="display: flex; justify-content: center; margin: 10px 0;">
+    <button type="button" class="btn btn-sm btn-outline-info" style="margin: 0 2px; width: 100px;">Critical</button>
+    <button type="button" class="btn btn-sm btn-outline-info" style="margin: 0 2px; width: 100px;">Error</button>
+    <button type="button" class="btn btn-sm btn-outline-info" style="margin: 0 2px; width: 100px;">Warning</button>
+    <button type="button" class="btn btn-sm btn-info" style="margin: 0 10px; width: 100px;">Info</button>
+    <button type="button" class="btn btn-sm btn-outline-info" style="margin: 0 2px; width: 100px;">Debug</button>
+</div>
+
+<hr>
+
+<style>
+.console {
+    padding: 5px 15px;
+    background-color: rgb(20,20,20);
+    border-radius: 5px;
+    color: azure;
+    height:150px;
+    border:1px solid #ccc;
+    font-size: small;
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    overflow:auto;
+}
+
+.box-stat {
+    width: 120px;
+    height: 120px;
+    background-color: rgb(200, 200, 200);
+    border-radius: 5px;
+    margin: 10px;
+    text-align: center;
+}
+
+.vertical-center {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+input {
+  border: 1px solid gray;
+  border-radius: 6px;
+  position: relative;
+  width: 200px;
+  margin: 10px;
+  line-height: 6ex;
+}
+
+label {
+  position: absolute;
+  top: 0.2ex;
+  z-index: 1;
+  left: 2em;
+  background-color: white;
+  padding: 0 5px;
+}
+</style>
+
 {% endblock %}

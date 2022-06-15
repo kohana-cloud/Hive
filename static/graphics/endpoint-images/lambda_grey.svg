@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.3.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 80 80" style="enable-background:new 0 0 80 80;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#231F20;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;}
+</style>
+<g id="Icon-Architecture_x2F_64_x2F_Arch_x5F_AWS-Lambda_x5F_64">
+	<g id="Icon-Architecture-BG_x2F_64_x2F_Compute">
+		<rect id="Rectangle" class="st0" width="80" height="80"/>
+	</g>
+	<path id="AWS-Lambda_Icon_64_Squid" class="st1" d="M28,66H15.6l13.7-28.7l6.2,12.8L28,66z M30.2,34.6c-0.2-0.3-0.5-0.6-0.9-0.6h0
+		c-0.4,0-0.7,0.2-0.9,0.6l-15.3,32c-0.1,0.3-0.1,0.7,0.1,1c0.2,0.3,0.5,0.5,0.8,0.5h14.6c0.4,0,0.7-0.2,0.9-0.6l8-16.9
+		c0.1-0.3,0.1-0.6,0-0.9L30.2,34.6z M65,66H52.7L32.9,24.6C32.7,24.2,32.3,24,32,24h-8.1l0-10h15.8l19.7,41.4
+		c0.2,0.3,0.5,0.6,0.9,0.6H65V66z M66,54h-5L41.3,12.6c-0.2-0.3-0.5-0.6-0.9-0.6H22.9c-0.6,0-1,0.4-1,1l0,12c0,0.3,0.1,0.5,0.3,0.7
+		c0.2,0.2,0.4,0.3,0.7,0.3h8.4l19.8,41.4c0.2,0.3,0.5,0.6,0.9,0.6h14c0.6,0,1-0.4,1-1V55C67,54.4,66.6,54,66,54L66,54z"/>
+</g>
+</svg>

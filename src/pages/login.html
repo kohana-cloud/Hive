@@ -1,28 +1,203 @@
 {% extends 'templates/base.html' %}
+
 {% block content %}
 
-<html>
-  <head>
-    <title>Flask Intro - login page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
-  </head>
-  <body>
-    <div class="container">
-      <h1>Please login</h1>
-      <br>
-      <form action="" method="post">
-        <input type="text" placeholder="Username" name="username" value="{{
-          request.form.username }}">
-         <input type="password" placeholder="Password" name="password" value="{{
-          request.form.password }}">
-        <input class="btn btn-default" type="submit" value="Login">
-      </form>
-      {% if error %}
-        <p class="error"><strong>Error:</strong> {{ error }}
-      {% endif %}
-    </div>
-  </body>
-</html>
+<body>
+  <!-- Bootstrap core CSS -->
+  <link href="static/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom styles for this template -->
+  <link href="static/css/floating-labels.css" rel="stylesheet">
 
+  <form class="form-signin" action="/login" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+    <div class="text-center mb-4">
+      <img class="mb-4" src="static/graphics/logo.png" width="150" height="150" style="margin-top: 50px;" alt="hive logo">
+      <h1 class="h3 mb-3 font-weight-normal">Welcome to the Hive</h1>
+    </div>
+
+    <div class="form-label-group">
+      <input type="username" id="inputEmail" name="username" value="{{
+        request.form.username }}" class="form-control" placeholder="Email address" required>
+      <label for="inputEmail">Username</label>
+    </div>
+
+    <div class="form-label-group">
+      <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" value="{{
+        request.form.password }}" required>
+      <label for="inputPassword">Password</label>
+    </div>
+
+    <button class="btn btn-primary btn-block" type="submit" style="width: 60%; display: block; margin: 5px auto;">
+      Sign in
+    </button>
+
+    <button class="btn btn-secondary btn-block" type="button" style="width: 60%; display: block; margin: 5px auto;"
+            data-bs-toggle="modal" data-bs-target="#createUser">
+        Create User
+    </button>
+    
+    <hr style="width: 70%; margin: 10px auto;">
+    
+    <!--Login with Google-->
+    <a class="btn btn-outline-dark" style="display:block; width: 60%; margin:5px auto;">
+      <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="static/graphics/login-logos/google.png"/>
+      Login with Google
+    </a>
+
+    <!--Login with Amazon-->
+    <amazon class="btn btn-outline-dark" style="display:block; width: 60%; margin:5px auto;">
+      <img id="amazon-icon" width="20px" style="margin-bottom:3px; margin-right:5px" alt="Amazon sign-in" src="static/graphics/login-logos/amazon.png"/>
+      Login with Amazon
+    </amazon>
+
+    <!--Login with Microsoft-->
+    <a class="btn btn-outline-dark amazon" style="display:block; width: 60%; margin:5px auto;">
+      <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Microsoft sign-in" src="static/graphics/login-logos/microsoft.png"/>
+      Login with Microsoft
+    </a>
+
+    {% if invalid %}
+    <div class="alert alert-danger" role="alert" style="text-align: center; margin-top: 15px;">
+      Invalid credentials!
+      <script>document.getElementById("inputPassword").value = null</script>
+    </div>
+    {% endif %}
+  </form>
+</body>
+
+
+
+<!-- create user -->
+<modal class="modal fade" id="createUser" tabindex="-1" role="dialog" aria-labelledby="modalCreateUser" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form action="adduser" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        
+        <!-- header -->
+        <div class="modal-header" style="background-color: rgba(0,0,0,.03)">
+          <h5 class="modal-title" style="display: block; margin-left: 180px;">Create User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- content -->
+        <div class="modal-body">
+
+          <!-- first name -->
+          <div class="row" style="margin-bottom: 5px;"> 
+            <div class="col-auto">
+              <img src="static/graphics/user-registration/person-fill.svg" width="38" height="38" style="margin-right:-10px;" alt="first name">
+            </div>
+            <div class="col">
+              <input id="registrationFirstName" class="form-control" placeholder="First Name" name="firstname">
+            </div>
+          </div>
+          
+          <!-- last name -->
+          <div class="row" style="margin-bottom: 20px;"> 
+            <div class="col-auto">
+              <img width="38" style="margin-right:-10px;">
+            </div>
+            <div class="col">
+              <input id="registrationLastName" class="form-control" placeholder="Last Name" name="lastname">
+            </div>
+          </div>
+
+          <!-- email address -->
+          <div class="row" style="margin-bottom: 20px;"> 
+            <div class="col-auto">
+              <img src="static/graphics/user-registration/at.svg" width="38" height="38" style="margin-right:-10px;" alt="email">
+            </div>
+            <div class="col">
+              <input id="registrationEmail" class="form-control" placeholder="Email address" name="email">
+            </div>
+          </div>
+
+          <!-- phone number -->
+          <div class="row" style="margin-bottom: 20px;"> 
+            <div class="col-auto">
+              <img src="static/graphics/user-registration/telephone-fill.svg" width="38" height="38" style="margin-right:-10px; padding: 4px;" alt="phone number">
+            </div>
+            <div class="col">
+              <input id="registrationPhoneNumber" class="form-control" placeholder="Phone number" name="phone">
+            </div>
+          </div>
+
+          <hr style="width: 95%; margin: auto; margin-bottom: 20px;">
+
+          <!-- username -->
+          <div class="row" style="margin-bottom: 20px;"> 
+            <div class="col-auto">
+              <img src="static/graphics/user-registration/person-badge-fill.svg" width="38" height="38" style="margin-right:-10px;" alt="username">
+            </div>
+            <div class="col">
+              <input id="registrationUsername" class="form-control" placeholder="Username" name="user">
+            </div>
+          </div>
+
+          <!-- password -->
+          <div class="row" style="margin-bottom: 5px;"> 
+            <div class="col-auto">
+              <img src="static/graphics/user-registration/lock-fill.svg" width="38" height="38" style="margin-right:-10px;" alt="password">
+            </div>
+            <div class="col">
+              <input id="registrationPassword" class="form-control" type="password" placeholder="Password" name="password">
+            </div>
+          </div>
+          
+          <div class="row" style="margin-bottom: 20px;"> 
+            <div class="col-auto">
+              <img width="38" style="margin-right:-10px;">
+            </div>
+            <div class="col">
+              <input id="registrationPassword2" class="form-control" type="password" placeholder="Repeat password">
+            </div>
+          </div>
+
+          <!-- check box -->
+          <div class="row" style="margin-bottom: 5px;">
+            <div class="form-check" style="margin-left: 113px;">
+              <input id="registrationCheckbox" class="form-check-input" type="checkbox">
+              <label class="form-check-label" for="registrationCheckbox">
+                  I agree to all <a href="#" class="link-primary">terms and conditions</a>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- footer -->
+        <div class="modal-footer" style="background-color: rgba(0,0,0,.03);">
+          <button id="adduserSubmit" class="btn btn-success" type="submit" style="margin: auto; width: 50%">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</modal>
+
+
+<!-- acquire jquery-->
+<script type="text/javascript" language="javascript" src="static/js/bundles/jquery-3.6.0.min.js"></script>
+
+<!-- acquire bootstrap-->
+<script src="static/js/bundles/bootstrap.min.js"></script>
+     
+
+<script>
+// Invert Amazon icon to White when hovering
+$("amazon").hover(
+  function() {
+    document.getElementById("amazon-icon").src = "static/graphics/login-logos/amazon-inverted.png"
+  }, function() {
+    document.getElementById("amazon-icon").src = "static/graphics/login-logos/amazon.png"
+  }
+);
+
+// Modal focus fix
+$('#createUser').on('shown.bs.modal', function () {
+  $('#registrationFirstName').trigger('focus')
+})
+</script>
 {% endblock %}
+  

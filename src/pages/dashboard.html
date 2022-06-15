@@ -2,79 +2,127 @@
 
 {% block content %}
 
-<div class="row">
+<!-- CSS acquire bootstrap-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-  {%for i in range(0, count)%}
-  
-  <div class="card" style="padding: 0; margin: 20px; width: 400px; background-color: rgb(252, 252, 252);">
-    <div class="card-header" style="background-color: rgb(0, 200, 0); color: rgb(255, 255, 255); text-align: center;">
-      <state>Healthy</state>
-    </div>
+<!-- JS acquire jquery-->
+<script type="text/javascript" language="javascript" src="static/js/bundles/jquery-3.6.0.min.js"></script>
 
-    {% if honeypots[i].type == "VPS" %}
+<!-- JS acquire popper-->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 
-    <div class="card-body">
-      <img src="static/graphics/endpoint-images/vps-fill.svg" height=75 class="card-img-top">
-      <h5 class="card-title" style=" text-align: center; margin-top: 10px;">Virtual Private Server (VPS)</h5>
-      
-      <p style="text-align: center;">
-        {{honeypots[i].id}}
-      </p>
+<!-- JS acquire bootstrap-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
-      
-      <table class="table table-sm">
-        <thead>
-          <tr>
-            <th scope="col">Int</th>
-            <th scope="col">Address</th>
-            <th scope="col">Mask</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">eno1</th>
-            <td>192.168.1.1</td>
-            <td>255.255.255.0 (24)</td>
-          </tr>
-          <tr>
-            <th scope="row"></th>
-            <td>192.168.2.1</td>
-            <td>255.255.255.0 (24)</td>
-          </tr>
-          <tr>
-            <th scope="row">vpn0</th>
-            <td>10.0.73.2</td>
-            <td>255.255.255.128 (25)</td>
-          </tr>
-        </tbody>
-      </table>
 
-      <form class="form-grid" style="margin:auto; display:block; margin-top: 30px;">
-        <div class="row" style="margin: 0;">
-            <div class="col">
-                <div class="row">
-                  <button type="button" id="buttonUUID" class="btn btn-dark" style="margin:auto; width: 90%;">Image</button>
-                </div>
-            </div>
-            <div class="col">
-              <div class="row">
-                <button type="button" id="buttonUUID" class="btn btn-danger" style="margin:auto; width: 90%;">Reset</button>
-              </div>
-            </div>
-        </div>
-    </form>
-    </div>
 
-    {% endif %}
-
-    <div class="card-footer text-muted" style="text-align: center;">
-      Updated: 35 seconds ago
-    </div>
+<div id="sortbar" class="card" style="margin: auto; width: 500px; background-color: rgb(252, 252, 252); margin-top: 20px;">
+  <div class="dropdown">
+    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuSort" data-bs-toggle="dropdown" aria-expanded="false">
+    Honeypot Health
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuSort">
+      <li><a class="dropdown-item">Honeypot Health</a></li>
+      <li><a class="dropdown-item">Honeypot Type</a></li>
+      <li><a class="dropdown-item">Honeypot ID</a></li>
+      <li><a class="dropdown-item">Owner ID</a></li>
+    </ul>
   </div>
-  {%endfor%}
-
 </div>
 
+<style>
+  hpicon {
+      width: 130px;
+      height: 130px;
+  
+      display: block;
+      margin: auto;
+  
+      border-radius: 5px; 
+  
+      background-color: rgb(225, 225, 225); 
+      border: 1px solid rgba(0, 0, 0, 0.125);
+  }
+  
+  hpicon:hover {
+      background-color: rgb(215, 215, 215); 
+      border: 3px solid rgba(0, 0, 0, 0.125);
 
+      cursor: pointer;
+  }
+  
+  .hpiconimg {
+      width: 80%;
+      height: 80%;
+
+      border-radius: 10px;
+  
+      display: block;
+      margin: auto;
+      transform: translateY(13%);
+  }
+</style>
+
+<!-- create honeypot -->
+<modal class="modal fade" id="createHoneypot" tabindex="-1" role="dialog" aria-labelledby="modalCreateHoneypot" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <!-- header -->
+      <div class="modal-header" style="background-color: rgba(0,0,0,.03)">
+        <h5 class="modal-title" style="display: block; margin-left: 165px;">New Honeypot</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- content -->
+      <div class="modal-body">
+        <div style="display:flex; flex-wrap:wrap; margin-bottom: 25px;" style="margin-bottom: 50px;"> 
+          <hpicon id="hp-ec2">
+            <img class="col hpiconimg" src="static/graphics/endpoint-images/ec2_orange.svg" alt="ec2">
+          </hpicon>
+          <hpicon id="hp-bottlerocket">
+            <img class="col hpiconimg" src="static/graphics/endpoint-images/bottlerocket_orange.svg" alt="bottlerocket">
+          </hpicon>
+          <hpicon id="hp-ecs">
+            <img class="col hpiconimg" src="static/graphics/endpoint-images/ecs_orange.svg" alt="ecs">
+          </hpicon>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; margin-bottom: 25px;" style="margin-bottom: 50px;"> 
+          <hpicon id="hp-frost">
+            <img class="col hpiconimg" src="static/graphics/endpoint-images/thinkbox_frost_orange.svg" alt="frost">
+          </hpicon>
+          <hpicon id="hp-lambda">
+            <img class="col hpiconimg" src="static/graphics/endpoint-images/lambda_orange.svg" alt="lambda">
+          </hpicon>
+          <hpicon id="hp-deadline">
+            <img class="col hpiconimg" src="static/graphics/endpoint-images/thinkbox_deadline_orange.svg" alt="deadline">
+          </hpicon>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; margin-bottom: 25px;" style="margin-bottom: 50px;"> 
+          <hpicon id="hp-outpost">
+            <img class="col hpiconimg" src="static/graphics/endpoint-images/outpost_orange.svg" alt="outpost">
+          </hpicon>
+          <hpicon id="hp-parallel">
+            <img class="col hpiconimg" src="static/graphics/endpoint-images/parallel_orange.svg" alt="parallel">
+          </hpicon>
+          <hpicon id="hp-serverless">
+            <img class="col hpiconimg" src="static/graphics/endpoint-images/serverless_orange.svg" alt="serverless">
+          </hpicon>
+        </div>
+
+        <p style="margin: -5px 0; text-align: center;"><i>More services coming soon</i>!</p>
+      </div>
+
+      <!-- footer -->
+      <div class="modal-footer" style="background-color: rgba(0,0,0,.03);"></div>
+
+    </div>
+  </div>
+</modal>
+
+<div id="card-container" class="row">
+  <!-- build cards-->
+  <script type="text/javascript" language="javascript" src="static/js/custom/get-honeypots.js"></script>
+</div>
 
 {% endblock %}
