@@ -16,6 +16,7 @@ from src.code.gRPC.requests import query_for_honeypots, new_honeypot
 HIVE_VERSION = "0.1b"
 JQUERY_VERSION = "3.6.0"
 BOOTSTRAP_VERSION = "5.1.3"
+CHARTJS_VERSION = "3.8.0"
 
 
 app = Flask(__name__, template_folder = os.path.abspath('src/pages'))
@@ -196,15 +197,15 @@ def about():
         except Exception as e: return f"Error: {e}", 403
 
     else: return render_template('about.html', jwt_name = "",
-        hive_v=HIVE_VERSION, jquery_v=JQUERY_VERSION, bootstrap_v=BOOTSTRAP_VERSION)
+        hive_v="", jquery_v="", bootstrap_v="", chart_v="")
 
     # Validate session based on authenticated user id from token
     if not (data['id'] in sessions): return render_template('about.html', jwt_name = "",
-        hive_v=HIVE_VERSION, jquery_v=JQUERY_VERSION, bootstrap_v=BOOTSTRAP_VERSION)
+        hive_v="", jquery_v="", bootstrap_v="", chart_v="")
 
     # Deliver the page as authenticated
     return render_template('about.html', jwt_name = data['name'],
-        hive_v=HIVE_VERSION, jquery_v=JQUERY_VERSION, bootstrap_v=BOOTSTRAP_VERSION)
+        hive_v=HIVE_VERSION, jquery_v=JQUERY_VERSION, bootstrap_v=BOOTSTRAP_VERSION, chart_v=CHARTJS_VERSION)
 
 
 # Dynamic routes for assets
