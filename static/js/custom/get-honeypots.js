@@ -283,16 +283,6 @@ function registerCardHover() {
 
     //need to update the column arangement so it doesnt move when borders change
     if (document.getElementById('hpicon-vps')) {
-        $("hpicon").hover(
-            function() {
-                this.style.border = "1px solid rgba(0, 0, 0, 0.5)";
-                this.style["boxShadow"] = "0 0 5px grey";
-            }, function() {
-                this.style.border = null;
-                this.style["boxShadow"] = null;
-            }
-        );
-
         $("#hpicon-vps").off('click').on('click', async function() {
             //if we want to protect CSRF here we need to set that up, currently excluded
 

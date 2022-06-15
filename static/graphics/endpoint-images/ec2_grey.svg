@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.3.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 80 80" style="enable-background:new 0 0 80 80;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#231F20;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;}
+</style>
+<g id="Icon-Architecture_x2F_64_x2F_Arch_x5F_Amazon-EC2_x5F_64">
+	<g id="Icon-Architecture-BG_x2F_64_x2F_Compute">
+		<rect id="Rectangle" class="st0" width="80" height="80"/>
+	</g>
+	<path id="Amazon-EC2_Icon_64_Squid" class="st1" d="M27,53h25V28H27V53z M54,28h4v2h-4v4h4v2h-4v3h4v2h-4v4h4v2h-4v4h4v2h-4v0.1
+		c0,1-0.8,1.9-1.9,1.9H52v4h-2v-4h-4v4h-2v-4h-3v4h-2v-4h-4v4h-2v-4h-4v4h-2v-4h-0.1c-1,0-1.9-0.8-1.9-1.9V53h-3v-2h3v-4h-3v-2h3v-4
+		h-3v-2h3v-3h-3v-2h3v-4h-3v-2h3v-0.1c0-1,0.8-1.9,1.9-1.9H27v-4h2v4h4v-4h2v4h4v-4h2v4h3v-4h2v4h4v-4h2v4h0.1c1,0,1.9,0.8,1.9,1.9
+		V28z M41,65.9c0,0.1-0.1,0.1-0.1,0.1H14.1c-0.1,0-0.1-0.1-0.1-0.1V39.1c0-0.1,0.1-0.1,0.1-0.1H20v-2h-5.9C13,37,12,38,12,39.1v26.8
+		c0,1.2,1,2.1,2.1,2.1h26.8c1.2,0,2.1-1,2.1-2.1V61h-2V65.9z M68,14.1v26.8c0,1.2-1,2.1-2.1,2.1H60v-2h5.9c0.1,0,0.1-0.1,0.1-0.1
+		V14.1c0-0.1-0.1-0.1-0.1-0.1H39.1c-0.1,0-0.1,0.1-0.1,0.1V20h-2v-5.9c0-1.2,1-2.1,2.1-2.1h26.8C67,12,68,13,68,14.1L68,14.1z"/>
+</g>
+</svg>
