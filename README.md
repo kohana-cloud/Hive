@@ -1,4 +1,4 @@
-# The-Hive
+# Hive
 Web application front end for deploying and managing honeypots.
 
 Going to update this eventually, hopefully this is enough for now. - Nate
