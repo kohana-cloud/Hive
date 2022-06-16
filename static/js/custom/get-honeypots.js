@@ -1,12 +1,13 @@
 // Data and template declerations
-var jsonData = null;
+var honeypotData = null;
 
-function cardTemplate(id, attributes) {
-    return `
-    <card id="card-${id}" class="card" style="padding: 0; margin: 20px; width: 200px; background-color: rgb(252, 252, 252);"></card>`
+// Define base card templates
+function cardRenderTemplate(id) {
+    return `<card id="card-${id}" class="card" onclick="cardExistingClicked()" style="padding: 0; margin: 20px; width: 200px;"></card>`
 }
 
-function cardHeaderTemplate(id, attributes) {
+// Build header
+function cardRenderHeader(id, attributes) {
     switch (attributes.health) {
         case 0:
             var headerTitle = "Healthy";
@@ -29,14 +30,18 @@ function cardHeaderTemplate(id, attributes) {
             var headerTextColor = "rgb(255,255,255)";
             break;
     }
-
-    return `
-    <div id="card-header-${id}" class="card-header" style="background-color: ${headerBackgroundColor}; color: ${headerTextColor}; text-align: center;">
-        ${headerTitle}
-    </div>`
+    return `<div id="card-header-${id}" class="card-header" style="background-color: ${headerBackgroundColor}; color: ${headerTextColor}; text-align: center;">${headerTitle}</div>`
 }
 
-function cardBodyTemplate(id, attributes) {
+// Define card body
+function cardRenderBody(id, attributes) {
+    switch (attributes.health) {
+        case 0: var bodyBackgroundColor = null; break;
+        case 1: var bodyBackgroundColor = null; break;
+        case 2: var bodyBackgroundColor = "rgb(255,220,220)"; break;
+        case 3: var bodyBackgroundColor = "rgb(255,220,220)"; break;
+    }
+
     switch (attributes.type) {
         case "EC2":
             var cardGraphic = "ec2_grey.svg";
@@ -52,7 +57,7 @@ function cardBodyTemplate(id, attributes) {
             break;
         case "FROST":
             var cardGraphic = "thinkbox_frost_grey.svg";
-            var cardTitle = "Thinkbox Frost";
+            var cardTitle = "TB Frost";
             break;
         case "LAMBDA":
             var cardGraphic = "lambda_grey.svg";
@@ -60,7 +65,7 @@ function cardBodyTemplate(id, attributes) {
             break;
         case "DEADLINE":
             var cardGraphic = "thinkbox_deadline_grey.svg";
-            var cardTitle = "Thinkbox Deadline";
+            var cardTitle = "TB Deadline";
             break;
         case "OUTPOST":
             var cardGraphic = "outpost_grey.svg";
@@ -76,12 +81,14 @@ function cardBodyTemplate(id, attributes) {
             break;
     }
 
+    // Set tile configurations based on health and stateful/stateless
     if (attributes.health == 0) {
         var buttonImageDisabled = "disabled";
+        var buttonResetDisabled = "disabled";
     }
     
     return `
-    <div id="card-body-${id}" class="card-body">
+    <div id="card-body-${id}" class="card-body" style="background-color:${bodyBackgroundColor}">
         <img src="static/graphics/endpoint-images/${cardGraphic}" height=75 style="display: block; margin:auto; border-radius:15px;">
         <h5 class="card-title" style=" text-align: center; margin-top: 10px;">${cardTitle}</h5>
         <h6 class="card-subtitle mb-2 text-muted" style="text-align: center;">${id}</h6>
@@ -92,360 +99,177 @@ function cardBodyTemplate(id, attributes) {
 
         <form class="form-grid" style="margin:auto; display:block; margin-top: 30px;">
             <div class="row" style="margin-bottom: 5px;">
-                <button type="button" id="buttonUUID" class="btn btn-dark btn-sm" style="margin:auto; width: 90%;">Image</button>
+                <button type="button" ${buttonResetDisabled} id="buttonUUID" class="btn btn-dark btn-sm" style="margin:auto; width: 90%;">Image</button>
             </div>
             <div class="row" style="margin-top: 0px;">
-                <button type="button"${buttonImageDisabled} id="buttonUUID" class="btn btn-danger btn-sm" style="margin:auto; width: 90%;">Reset</button>
+                <button type="button" ${buttonImageDisabled} id="buttonUUID" class="btn btn-danger btn-sm" style="margin:auto; width: 90%;">Reset</button>
             </div>
         </form>
     </div>`
 }
 
-function cardFooterTemplate(id, attributes) {
-    
+// Build card footer
+function cardRenderFooter(id, attributes) {
     switch (attributes.health) {
-        case 0:
-            var footerText = "loading"
-            var footerTextColor = "#6c757d";
-            var footerBackgroundColor = "rgba(0,0,0,.03)";
-            break;
-        case 1:
-            var footerText = "loading"
-            var footerTextColor = "#6c757d";
-            var footerBackgroundColor = "rgba(0,0,0,.03)";
-            break;
-        case 2:
-            var footerText = "loading"
-            var footerTextColor = "#6c757d";
-            var footerBackgroundColor = "rgba(0,0,0,.03)";
-            break;
-        case 3:
-            var footerText = "loading"
-            var footerTextColor = "#6c757d";
-            var footerBackgroundColor = "rgba(0,0,0,.03)";
-            break;
+        case 0: var footerBackgroundColor = "rgb(240,240,240)"; break;
+        case 1: var footerBackgroundColor = "rgb(240,240,240)"; break;
+        case 2: var footerBackgroundColor = "rgb(250,180,180)"; break;
+        case 3: var footerBackgroundColor = "rgb(250,180,180)"; break;
     }
 
-    return `
-    <div id="card-footer-${id}" class="card-footer text-muted" style="text-align: center; color: ${footerTextColor}; background-color: ${footerBackgroundColor};">
-        ${footerText}
-    </div>`;
+    return `<div id="card-footer-${id}" class="card-footer text-muted" style="text-align: center; color: rgb(108, 117, 125); background-color: ${footerBackgroundColor};">loading</div>`;
 }
 
+// Build new card
 function cardRenderNew() {
     return `
-    <card id="card-new" class="card" style="min-height: 425px; padding: 0; margin: 20px; width: 200px; background-color: rgb(252, 252, 252);">
+    <card id="card-new" class="card card-new" onclick="cardNewClicked()" style="min-height: 425px; padding: 0; margin: 20px; width: 200px;">
         <img id="card-new-img" src="static/graphics/endpoint-images/plus-dotted.svg" height=100 class="width: max-content; card-img-top" style="position: absolute; top: 50%; -ms-transform: translateY(-50%);transform: translateY(-50%);"/>
     </card>`
 }
 
-
 // Generate HTML from JSON and render
-function updateAllCards() {
+async function createAllCards() {
     let honeypot_cards = "";
 
-    // Derive the card shells
-    $.each(jsonData, function (hpId, hpAttributes) {
-        honeypot_cards += cardTemplate(hpId);
-    });
+    // Create items array and sort high to low
+    var sortedHoneypots = Object.keys(honeypotData).map(function(key) { return [key, honeypotData[key]["health"]] });
+    sortedHoneypots.sort(function(first, second) { return second[1] - first[1] });
 
-    // Add new block
+    // Render the card shells and manual add
+    $.each(sortedHoneypots, function (index) {
+        hpId = sortedHoneypots[index][0];
+        honeypot_cards += cardRenderTemplate(hpId);
+    });
     honeypot_cards += cardRenderNew()
 
-    // Render the card shells
+    // Create the rendered card shells
     document.getElementById("card-container").innerHTML = honeypot_cards;
     
-    // Derive Card Attributes
-    $.each(jsonData, function (hpId, hpAttributes) {
-        let honeypot_card = "";
-
-        // Derive card segments
-        honeypot_card += cardHeaderTemplate(hpId, hpAttributes);
-        honeypot_card += cardBodyTemplate(hpId, hpAttributes);
-        honeypot_card += cardFooterTemplate(hpId, hpAttributes);
-
-        // Render card HTML
-        document.getElementById("card-" + hpId).innerHTML = honeypot_card;
-        honeypot_cards += honeypot_card
+    // Render card contents, shells are sorted in the page already
+    $.each(honeypotData, function (hpId, hpAttributes) {
+        document.getElementById("card-" + hpId).innerHTML = cardRenderHeader(hpId, hpAttributes) 
+                                                            + cardRenderBody(hpId, hpAttributes) 
+                                                          + cardRenderFooter(hpId, hpAttributes);
     });
-
-    // Update CSS to center cards
-    let cardContainer = document.getElementById("card-container");
-    cardContainer.style.justifyContent = "center";
 }
 
+// Update footer timestamps every second
+async function updateFooterTimeStamp() {
+    if (document.getElementsByClassName("card")) {
+        let dtNow = new Date().getTime();
 
-// Generate HTML from JSON and render
-function updateCardFooters() {
-    let dtNow = new Date().getTime();
+        // Update Text
+        $.each(honeypotData, function (hpId, hpAttributes) {
+            // Convert last update timestamp of target
+            let dtTarget = new Date(hpAttributes.updated*1000).getTime();
+            let dtDelta = dtNow - dtTarget;
+    
+            let days = Math.floor(dtDelta / (1000 * 60 * 60 * 24));
+            let hours = Math.floor((dtDelta % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let minutes = Math.floor((dtDelta % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((dtDelta % (1000 * 60)) / 1000);
+    
+            let finalText = "";
+            if (days == 1) {
+                finalText = `1 day ago`
+            } else if (days !== 0) {
+                finalText = `${days} days ago`
+            } else if (hours == 1) {
+                finalText = `1 hour ago`
+            } else if (hours !== 0) {
+                finalText = `${hours} hours ago`
+            } else if (minutes == 1) {
+                finalText = `1 minute ago`
+            } else if (minutes !== 0) {
+                finalText = `${minutes} minutes ago`
+            } else if (seconds == 1) {
+                finalText = `1 second ago`
+            } else {
+                finalText = `${seconds} seconds ago`
+            }
+    
+            // Render card HTML
+            if (document.getElementById(`card-footer-${hpId}`)) {
+                document.getElementById(`card-footer-${hpId}`).textContent = finalText;
+            }
+        });
+    }
+} var run = setInterval(updateFooterTimeStamp, 1000);
 
-    // Update Text
-    $.each(jsonData, function (hpId, hpAttributes) {
-        // Convert last update timestamp of target
-        let dtTarget = new Date(hpAttributes.updated*1000).getTime();
-        let dtDelta = dtNow - dtTarget;
 
-        let days = Math.floor(dtDelta / (1000 * 60 * 60 * 24));
-        let hours = Math.floor((dtDelta % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        let minutes = Math.floor((dtDelta % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((dtDelta % (1000 * 60)) / 1000);
-
-        let finalText = "";
-        if (days == 1) {
-            finalText = `1 day ago`
-        } else if (days !== 0) {
-            finalText = `${days} days ago`
-        } else if (hours == 1) {
-            finalText = `1 hour ago`
-        } else if (hours !== 0) {
-            finalText = `${hours} hours ago`
-        } else if (minutes == 1) {
-            finalText = `1 minute ago`
-        } else if (minutes !== 0) {
-            finalText = `${minutes} minutes ago`
-        } else if (seconds == 1) {
-            finalText = `1 second ago`
-        } else {
-            finalText = `${seconds} seconds ago`
-        }
-
-        //This bug is due to not having up to date context, need to revise this all, will likely do it when i do the sorting
-
-        // Render card HTML
-        document.getElementById("card-footer-" + hpId).textContent = finalText;
-    });
-
-    // Update CSS to center cards
-    let cardContainer = document.getElementById("card-container");
-    cardContainer.style.justifyContent = "center";
-}
-
-// Execute on page load
+// Render all cards once page has loaded
 $(document).ready(function() {
-
     // Get JSON from server
-    $.getJSON("api/v1/honeypots", function(data) {
-        jsonData = data;
-    }) // Build the HTML objects
-     .done(function() {
-        updateAllCards();
-        updateCardFooters();
-    });
+    $.getJSON("api/v1/honeypots", function(data) { honeypotData = data })
+
+    // Build the HTML objects
+    .done(function() { createAllCards() });
 });
 
-// Start updating card footer times every second
-function updateDate() {
-    updateCardFooters();
-} var run = setInterval(updateDate, 1000);
+// Flash page title if any HP has been compromised
+var pageFlashState = false;
+function flashTitle () {
+    var pageFlash = false;
 
+    // Check if any honeypots are compromised
+    $.each(honeypotData, function (id, attributes) {
+        if (attributes.health == 3 || attributes.health == 2) { pageFlash = true }
+    });
+
+    // If there is a compromised hp alter the flash state, else default
+    if (pageFlash && !pageFlashState) { 
+        document.title = "The Hive 🔴";
+        pageFlashState = true;
+    } else {
+        document.title = "The Hive"
+        pageFlashState = false;
+    }
+} var run = setInterval(flashTitle, 500);
+
+
+// Flash HP border and shadow if it has been compromised
 var flashOn = false;
 function flashLive() {
     var d = new Date()
-    
-    $.each(jsonData, function (id, attributes) {
-        // Verify card represents a honeypot under attack
+    $.each(honeypotData, function (id, attributes) {
         if (attributes.health == 3) {
-            // Update component colors
-            document.getElementById("card-body-" + id).style.backgroundColor = "rgb(255,220,220)";
-            document.getElementById("card-footer-" + id).style.backgroundColor = "rgb(250,180,180)";
-
-            // Update background
             if (!flashOn) {
                 document.getElementById("card-" + id).style.border = "1px solid rgba(0, 0, 0, 0.125)";
                 document.getElementById("card-" + id).style["boxShadow"] = null
-
-                document.title = "The Hive  🔴"
             } else {
                 document.getElementById("card-" + id).style.border = "1px solid red";
                 document.getElementById("card-" + id).style["boxShadow"] = "0 0 5px red";
-
-                document.title = "The Hive"
             }
-            
-        } // reversion should be handled elsewhere
+        }
     });
 
-    // Flip state
-    if (flashOn) {
-        flashOn = false;
-    } else {
-        flashOn = true;
-    }
-    
+    // Flip flash state
+    if (flashOn) { flashOn = false } else { flashOn = true }
 } var run = setInterval(flashLive, 250);
 
 
-function delay(time) {
-    return new Promise(resolve => setTimeout(resolve, time));
-  }
+function cardExistingClicked() {
+    console.log('existing')
+    console.log(this)
+}
 
-// Hover if element exists
-function registerCardHover() {
-    if (document.getElementById('card-new')) {
-        $("card").hover(
-            function() {
-                this.style.border = "1px solid rgba(0, 0, 0, 0.5)";
-                this.style["boxShadow"] = "0 0 5px grey";
-            }, function() {
-                this.style.border = null;
-                this.style["boxShadow"] = null;
-            }
-        );
 
-        $("#card-new").off('click').on('click', function() {
-            $("#createHoneypot").modal('show');
-        });
-    }
+function cardNewClicked() {
+    $("#createHoneypot").modal('show');
+}
 
-    if (document.getElementById('card-new-img')) {
-        $("#card-new").hover(
-            function() {
-                this.style.backgroundColor = "rgba(240,240,240)";
-            }, function() {
-                this.style.backgroundColor = "rgba(252,252,252)";
-            }
-        );
-    }
 
-    //need to update the column arangement so it doesnt move when borders change
-    if (document.getElementById('hp-ec2')) {
-        $("#hp-ec2").off('click').on('click', async function() {
-            //if we want to protect CSRF here we need to set that up, currently excluded
-            $.post('/api/v1/honeypots', { type: 'ec2' });
+// Define delay function
+function delay(time) { return new Promise(resolve => setTimeout(resolve, time)) }
 
-            $("#createHoneypot").modal('hide');
-            await delay(1000);
-            newhp = true;
 
-            // Get JSON from server
-            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
-            await delay(1000); 
-
-            updateAllCards();
-            updateCardFooters();
-        });
-        
-        $("#hp-bottlerocket").off('click').on('click', async function() {
-            //if we want to protect CSRF here we need to set that up, currently excluded
-            $.post('/api/v1/honeypots', { type: 'bottlerocket' });
-            $("#createHoneypot").modal('hide');
-            await delay(1000);
-            newhp = true;
-
-            // Get JSON from server
-            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
-            await delay(1000); 
-
-            updateAllCards();
-            updateCardFooters();
-        });
-        
-        $("#hp-ecs").off('click').on('click', async function() {
-            //if we want to protect CSRF here we need to set that up, currently excluded
-            $.post('/api/v1/honeypots', { type: 'ecs' });
-            $("#createHoneypot").modal('hide');
-            await delay(1000);
-            newhp = true;
-
-            // Get JSON from server
-            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
-            await delay(1000); 
-
-            updateAllCards();
-            updateCardFooters();
-        });
-
-        $("#hp-frost").off('click').on('click', async function() {
-            //if we want to protect CSRF here we need to set that up, currently excluded
-            $.post('/api/v1/honeypots', { type: 'frost' });
-            $("#createHoneypot").modal('hide');
-            await delay(1000);
-            newhp = true;
-
-            // Get JSON from server
-            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
-            await delay(1000); 
-
-            updateAllCards();
-            updateCardFooters();
-        });
-
-        $("#hp-lambda").off('click').on('click', async function() {
-            //if we want to protect CSRF here we need to set that up, currently excluded
-            $.post('/api/v1/honeypots', { type: 'lambda' });
-            $("#createHoneypot").modal('hide');
-            await delay(1000);
-            newhp = true;
-
-            // Get JSON from server
-            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
-            await delay(1000); 
-
-            updateAllCards();
-            updateCardFooters();
-        });
-
-        $("#hp-deadline").off('click').on('click', async function() {
-            //if we want to protect CSRF here we need to set that up, currently excluded
-            $.post('/api/v1/honeypots', { type: 'deadline' });
-            $("#createHoneypot").modal('hide');
-            await delay(1000);
-            newhp = true;
-
-            // Get JSON from server
-            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
-            await delay(1000); 
-
-            updateAllCards();
-            updateCardFooters();
-        });
-
-        $("#hp-outpost").off('click').on('click', async function() {
-            //if we want to protect CSRF here we need to set that up, currently excluded
-            $.post('/api/v1/honeypots', { type: 'outpost' });
-            $("#createHoneypot").modal('hide');
-            await delay(1000);
-            newhp = true;
-
-            // Get JSON from server
-            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
-            await delay(1000); 
-
-            updateAllCards();
-            updateCardFooters();
-        });
-
-        $("#hp-parallel").off('click').on('click', async function() {
-            //if we want to protect CSRF here we need to set that up, currently excluded
-            $.post('/api/v1/honeypots', { type: 'parallel' });
-            $("#createHoneypot").modal('hide');
-            await delay(1000);
-            newhp = true;
-
-            // Get JSON from server
-            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
-            await delay(1000); 
-
-            updateAllCards();
-            updateCardFooters();
-        });
-
-        $("#hp-serverless").off('click').on('click', async function() {
-            //if we want to protect CSRF here we need to set that up, currently excluded
-            $.post('/api/v1/honeypots', { type: 'serverless' });
-            $("#createHoneypot").modal('hide');
-            await delay(1000);
-            newhp = true;
-
-            // Get JSON from server
-            $.getJSON("api/v1/honeypots", function(data) {jsonData = data});
-            await delay(1000); 
-
-            updateAllCards();
-            updateCardFooters();
-        });
-    }
-
-    
-   
-} var run = setInterval(registerCardHover, 500);
+// Create a new honeypot
+function newHP(hptype) {
+    $.post('/api/v1/honeypots', { type: hptype }, function(data) {
+        honeypotData = data
+    }).done(function() {
+        $("#createHoneypot").modal('hide');
+        createAllCards();
+    });    
+}

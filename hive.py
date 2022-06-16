@@ -220,14 +220,11 @@ def send_report(path):
 @require_user
 @limiter.limit("120/minute;1200/hour", override_defaults=True)
 def api_v1_honeypots(jwt_data):
-    if (request.method == "GET"):
-        return jsonify(query_for_honeypots())
-
-    elif (request.method == "POST"):
+    # add the new honeypot if its a post
+    if (request.method == "POST"):
         new_honeypot(type=request.form['type'])
-        time.sleep(0.5)
 
-        return 'success', 200
+    return jsonify(query_for_honeypots())
 
 
 if __name__ == '__main__': app.run()
