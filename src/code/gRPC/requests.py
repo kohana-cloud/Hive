@@ -10,7 +10,7 @@ SERVER_HOST = "localhost"
 SERVER_PORT = 15001
 
 class QueryClient(object):
-    def __init__(self, tls:bool=True):
+    def __init__(self, tls:bool=False):
         if tls:
             with open('cert/server.crt', 'rb') as fio:
                 tls_secret = grpc.ssl_channel_credentials(fio.read())
