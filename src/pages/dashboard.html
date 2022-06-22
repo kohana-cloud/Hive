@@ -14,6 +14,8 @@
 <!-- JS acquire bootstrap-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
+<!-- acquire chartjs-->
+<script src="static/js/bundles/chart.min.js"></script>
 
 <div id="sortbar" class="card" style="display:flex; flex-direction:row; margin: auto; width: 500px; background-color: rgb(252, 252, 252); margin-top: 20px;">
   <div class="dropdown" style="display:block; margin-right: 10px;">
@@ -88,10 +90,9 @@
   .card-new:hover {
     background-color: rgba(245,245,245);
   }
-
 </style>
 
-<!-- create honeypot -->
+<!-- create honeypot modal -->
 <modal class="modal fade" id="createHoneypot" tabindex="-1" role="dialog" aria-labelledby="modalCreateHoneypot" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -147,6 +148,179 @@
     </div>
   </div>
 </modal>
+
+
+<style>
+  .unbroken-flex-header {
+    background-color: rgba(0,0,0,.03);
+    justify-content: space-between;
+    flex-direction: row;
+    display: flex;
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .console {
+    padding: 5px 15px;
+    background-color: rgb(20,20,20);
+    border-radius: 5px;
+    color: azure;
+    height:300px;
+    border:1px solid #ccc;
+    font-size: small;
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    overflow:auto;
+  }
+</style>
+
+<!-- honeypot observation modal -->
+<modal class="modal fade" id="observeHoneypot" tabindex="-1" role="dialog" aria-labelledby="modalObserveHoneypot" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+
+      <!-- header -->
+      <div class="unbroken-flex-header" style="background-color: rgba(0,0,0,.03)">
+        <img src="static/graphics/endpoint-images/ec2_grey.svg" style="max-height: 30px; border-radius: 5px;" alt="hpic">
+        <h5 class="modal-title" style="display: block;">1a463804ea</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- content -->
+      <div class="modal-body">
+        <div class="row" style="height: 258px;">
+          <div class="col" style="flex: 0 0 auto; width: 25%;">
+            <canvas id="radarChart"></canvas>
+            <script>
+              const radarChart = new Chart(document.getElementById('radarChart').getContext('2d'), {
+                type: 'radar',
+                data: {
+                  labels: [
+                    'CPU',
+                    'RAM',
+                    'NET',
+                    'HDD'
+                  ],
+                  datasets: [{
+                    data: [29, 69, 53, 99],
+                    fill: true,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    pointBackgroundColor: 'rgb(255, 99, 132)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(255, 99, 132)'
+                  }]
+                },
+                options: {
+                  plugins: {
+                    legend: {
+                      display: false
+                    }
+                  },
+                  elements: {
+                    line: { borderWidth: 3 }
+                  },
+                  scale: { min: 0, max: 100 }
+                }
+              });
+            </script>
+          </div>
+          <div class="col" style="flex: 0 0 auto; width: 75%;">
+            <canvas id="lineChart" style="height: 100%;"></canvas>
+            <script>
+              const linechart = new Chart(document.getElementById('lineChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                  labels: ['-19m','-18m','-17m','16m','-15m','-14m','-13m','-12m','-11m','10m', 
+                    '-9m','-8m','-7m','6m','-5m','-4m','-3m','-2m','-1m','0m'],
+                  datasets: [{
+                    type: 'line', label: 'CPU',
+                    data: [0, 4, 3, 0, 4, 4, 2, 3, 0, 4, 4, 5, 2, 4, 4, 5, 34, 24, 39, 29],
+                    borderColor: 'rgb(54, 162, 235)',
+                    fill: true
+                  }, {
+                    type: 'line', label: 'RAM',
+                    data: [5, 2, 4, 5, 5, 2, 3, 2, 4, 3, 5, 4, 4, 3, 0, 2, 74, 73, 80, 69],
+                    borderColor: 'rgb(162, 54, 235)',
+                    fill: true
+                  },{
+                    type: 'line', label: 'NET',
+                    data: [3, 2, 3, 2, 5, 4, 4, 5, 1, 5, 2, 5, 0, 5, 5, 4, 73, 76, 69, 53],
+                    borderColor: 'rgb(235, 162, 54)',
+                    fill: true
+                  },{
+                    type: 'line', label: 'HDD',
+                    data: [2, 5, 2, 2, 0, 0, 0, 0, 3, 1, 1, 0, 2, 1, 1, 0, 99, 96, 96, 99],
+                    borderColor: 'rgb(235, 50, 54)',
+                    fill: true
+                  }]
+                },
+                options: {
+                  plugins: {
+                    legend: {
+                      display: true
+                    }
+                  },
+                  elements: {
+                    line: { borderWidth: 3 }
+                  },
+                  scale: { min: 0, max: 100 },
+                  maintainAspectRatio: false
+                }
+              });
+            </script>
+          </div>
+        </div>
+        <hr/>
+        <div class="row">
+          <div class="col">
+            <h5 style="text-align: center; margin-top: 15px;">Live Console Feed</h5>
+            <div class="console" style="margin-top: 15px;">
+              ┌──(singern㉿kali)-[~/Desktop]<br>
+              └─$ echo 'were doing things' <br>                                                                                                    
+              were doing things      <br>                                                                                                                      
+              <br>                                                                                                                 
+              ┌──(singern㉿kali)-[~/Desktop]  <br>                                                                                                              
+              └─$ wall look at all this output    <br>                                                                                                          
+              <br>                                                                                                       
+              Broadcast message from singern@kali (pts/5) (Tue Jun 21 22:00:54 2022):   <br>                                                                    
+              <br>                                                                                            
+              look at all this output                          <br>                                                                                                
+              <br>                                                                                                           
+              ┌──(singern㉿kali)-[~/Desktop]          <br>                                                                                                 
+              └─$ :(){ :|:& };:loljk               <br>                                                                                                          
+              <br>                                                                                                       
+              ┌──(singern㉿kali)-[~/Desktop]         <br>                                                                                                      
+              └─$ ls -l                         <br>                                                                                                   130 ⨯ 
+              total 363108                        <br>                                                                                                         
+              -rw-------  1 singern singern  33554432 Dec  4  2021 2021-12-02-20211202-nuro.burp  <br>                                                        
+              -rw-------  1 singern singern  33554432 Jan 14 16:08 2022-01-08-CTFd-Research.burp   <br>                                                         
+              -rw-------  1 singern singern  33554432 Jan 14 15:47 2022-01-08-CTFd-Research.burp.backup  <br>                                                   
+              drwx------ 28 singern singern      4096 Apr 18 13:25 Architecture-Service-Icons_04302022  <br>                                                        
+              -rw-r--r--  1 root    root        85313 Jan 27 21:59 bits.log                <br>                                                                                
+            </div>
+          </div>
+          <div class="col-auto">
+            <h5 style="text-align: center; margin-top: 15px;">Rapid Triggers</h5>
+            <div style="display:flex; margin-top: 15px; height:300px; width:250px;flex-direction: column;justify-content: space-between;">
+              <button type="button" id="test1" class="btn btn-warning" style="width: 95%; margin: 0 auto;">Kill Attack, Start Triage</button>
+              <button type="button" id="test2" class="btn btn-dark" style="width: 95%; margin: 0 auto;">Interactive Messenger</button>
+              <button type="button" id="test3" class="btn btn-dark" style="width: 95%; margin: 0 auto;">Bait Dropper</button>
+              <button type="button" id="test4" class="btn btn-dark" style="width: 95%; margin: 0 auto;">Lattency Generator</button>
+              <button type="button" id="test5" class="btn btn-dark" style="width: 95%; margin: 0 auto;">Forensic Imager</button>
+              <button type="button" id="test6" class="btn btn-danger" style="width: 95%; margin: 0 auto;">Reset Honeypot</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- footer -->
+      <div class="modal-footer" style="background-color: rgba(0,0,0,.03);"></div>
+
+    </div>
+  </div>
+</modal>
+
 
 <div id="card-container" class="row" style="justify-content: center;">
   <!-- build cards-->
