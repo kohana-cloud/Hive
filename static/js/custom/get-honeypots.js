@@ -250,8 +250,8 @@ function flashLive() {
 
 
 function cardExistingClicked() {
-    console.log('existing')
-    console.log(this)
+    console.log(this.hpId)
+    $("#observeHoneypot").modal('show');
 }
 
 
@@ -282,22 +282,9 @@ async function updateAllCards() {
     // Get JSON from server
     $.getJSON("api/v1/honeypots", function(data) { honeypotData = data })
 
-    
-    let honeypot_cards = "";
-
     // Create items array and sort high to low
     var sortedHoneypots = Object.keys(honeypotData).map(function(key) { return [key, honeypotData[key]["health"]] });
     sortedHoneypots.sort(function(first, second) { return second[1] - first[1] });
-
-    // Render the card shells and manual add
-    $.each(sortedHoneypots, function (index) {
-        hpId = sortedHoneypots[index][0];
-        honeypot_cards += cardRenderTemplate(hpId);
-    });
-    honeypot_cards += cardRenderNew()
-
-    // Create the rendered card shells
-    document.getElementById("card-container").innerHTML = honeypot_cards;
     
     // Render card contents, shells are sorted in the page already
     $.each(honeypotData, function (hpId, hpAttributes) {
