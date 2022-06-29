@@ -1,0 +1,14 @@
+[Unit]
+Description=Kohana Hive
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=kohana
+ExecStart=/usr/bin/python3 /opt/Kohana/hive.py
+
+[Install]
+WantedBy=multi-user.target
