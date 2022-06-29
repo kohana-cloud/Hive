@@ -146,7 +146,7 @@ def logout(jwt_data):
     return redirect("login"), 302
 
 # TODO Need to actually add all the validation/RBAC stuff - Nate (nathaniel@singer.cloud)
-@app.route('/adduser', methods=["POST"])
+"""@app.route('/adduser', methods=["POST"])
 @limiter.limit(None)
 def add_user():
     append_user(app.config['USER_CONFIG'], User(
@@ -164,7 +164,7 @@ def add_user():
     # Update users in memory after append
     app.config['USERS'] = ingest_users(app.config['USER_CONFIG'])
 
-    return redirect("login"), 302
+    return redirect("login"), 302"""
 
 @app.route('/dashboard', methods=["GET"])
 @require_user

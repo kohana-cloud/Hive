@@ -1,0 +1,41 @@
+users:
+  136129fc-f766-11ec-8c7a-75e0b7943059:
+    admin: false
+    email: kably@ischool.berkeley.edu
+    first: Ismail
+    last: Kably
+    phone: 123-456-7890
+    pwhash_salted: $2b$10$vDoyHHGyHJ4pXMB1G46UOuaEe.AN3rjdzDeMCBNfX6Z5TQlow4u6W
+    username: ikably
+  23c6fcf4-f766-11ec-8c7a-75e0b7943059:
+    admin: false
+    email: erochon@ischool.berkeley.edu
+    first: Emma
+    last: Rochon
+    phone: 123-456-7890
+    pwhash_salted: $2b$10$IYfUHyF2gdFdSlmlzH1X4e8e6SgvudtnEG5bgsPOsFfVUkFXXHb9i
+    username: erochon
+  c6f72742-f765-11ec-8c7a-75e0b7943059:
+    admin: false
+    email: nathaniel.singer@berkeley.edu
+    first: Nate
+    last: Singer
+    phone: 123-456-7890
+    pwhash_salted: $2b$10$Oh2dwunZAOvXxHZFRJAaKuedV169cecOee63R1UX.0qw4W8uvVZrS
+    username: nsinger
+  e5e899ce-f765-11ec-8c7a-75e0b7943059:
+    admin: false
+    email: sujith.dhati@ischool.berkeley.edu
+    first: Sujith
+    last: Dhati
+    phone: 123-456-7890
+    pwhash_salted: $2b$10$AwOdsTM78W0g5VsiW9oQSuVV2G4/4nlHvaK9B.wnaE5j3WXRbwSNG
+    username: sdhati
+  f906d3d6-f765-11ec-8c7a-75e0b7943059:
+    admin: false
+    email: laura.haddad@ischool.berkeley.edu
+    first: Laura
+    last: Haddad
+    phone: 123-456-7890
+    pwhash_salted: $2b$10$iw25vDmMfobBMzVD4GcBtusvtuilG11IotqiyAggqxSEOSP2Jhome
+    username: lhaddad
