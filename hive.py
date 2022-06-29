@@ -4,6 +4,7 @@ from flask_limiter import Limiter
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from functools import wraps
 from hashlib import new
+from src.code.configuration import Configuration
 
 import secrets, os, jwt, datetime, uuid
 import time
@@ -170,7 +171,7 @@ def add_user():
 @require_user
 @limiter.limit(None)
 def dashboard(jwt_data):
-    honeypots = query_for_honeypots()
+    honeypots = query_for_honeypots(app.config['tls_enabled'], app.config['public_key'])
     return render_template('dashboard.html', count = len(honeypots), honeypots = honeypots, jwt_name = jwt_data['name'])
 
 @app.route('/profiler', methods=["GET"])
@@ -222,9 +223,17 @@ def send_report(path):
 def api_v1_honeypots(jwt_data):
     # add the new honeypot if its a post
     if (request.method == "POST"):
-        new_honeypot(type=request.form['type'])
+        new_honeypot(request.form['type'], app.config['tls_enabled'], app.config['public_key'])
 
-    return jsonify(query_for_honeypots())
+    return jsonify(query_for_honeypots(app.config['tls_enabled'], app.config['public_key']))
 
 
-if __name__ == '__main__': app.run()
+if __name__ == '__main__':
+    configuration = Configuration("configuration.yaml")
+
+    # Get public key
+    configuration.read_keys()
+    app.config['tls_enabled'] = configuration.tls_enabled
+    app.config['public_key'] = configuration.public_key
+
+    app.run()

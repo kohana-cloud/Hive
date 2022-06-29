@@ -1,0 +1,4 @@
+tls:
+  privatekey_relpath: "cert/server.key"
+  publickey_relpath: "cert/server.crt"
+  enabled: False

@@ -12,10 +12,9 @@ SERVER_PORT = 15001
 TLS_ENABLED = False
 
 class QueryClient(object):
-    def __init__(self, tls:bool=True):
-        if tls:
-            with open('cert/server.crt', 'rb') as fio:
-                tls_secret = grpc.ssl_channel_credentials(fio.read())
+    def __init__(self, tls_enabled:bool, public_key:str):
+        if tls_enabled:
+            tls_secret = grpc.ssl_channel_credentials(public_key)
             self.channel = grpc.secure_channel(f"{SERVER_HOST}:{SERVER_PORT}", tls_secret)
         else:
             self.channel = grpc.insecure_channel(f"{SERVER_HOST}:{SERVER_PORT}")
@@ -31,13 +30,13 @@ class QueryClient(object):
             ))
 
 
-def query_for_honeypots():
-    client = QueryClient(tls=TLS_ENABLED)
+def query_for_honeypots(tls_enabled:bool, public_key:str) -> str:
+    client = QueryClient(tls_enabled, public_key)
     honeypots = client.get_honeypots().HoneypotsAsJSON
 
     return json.loads(honeypots)
 
 
-def new_honeypot(type:str):
-    client = QueryClient(tls=TLS_ENABLED)
+def new_honeypot(type:str, tls_enabled:bool, public_key:str) -> str:
+    client = QueryClient(tls_enabled, public_key)
     client.new_honeypot(type=type)
