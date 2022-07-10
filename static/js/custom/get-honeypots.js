@@ -30,7 +30,9 @@ function cardRenderHeader(id, attributes) {
             var headerTextColor = "rgb(255,255,255)";
             break;
     }
-    return `<div id="card-header-${id}" class="card-header" style="background-color: ${headerBackgroundColor}; color: ${headerTextColor}; text-align: center;">${headerTitle}</div>`
+    return `<div id="card-header-${id}" class="card-header" style="background-color: ${headerBackgroundColor}; color: ${headerTextColor}; text-align: center;">
+    ${headerTitle}
+    </div>`
 }
 
 // Define card body
@@ -91,7 +93,7 @@ function cardRenderBody(id, attributes) {
     <div id="card-body-${id}" class="card-body" style="background-color:${bodyBackgroundColor}">
         <img src="static/graphics/endpoint-images/${cardGraphic}" height=75 style="display: block; margin:auto; border-radius:15px;">
         <h5 class="card-title" style=" text-align: center; margin-top: 10px;">${cardTitle}</h5>
-        <h6 class="card-subtitle mb-2 text-muted" style="text-align: center;">${id}</h6>
+        <h6 class="card-subtitle mb-2 text-muted" style="text-align: center;">${id.split('-')[0]}</h6>
 
         placeholder
         placeholder
@@ -250,7 +252,6 @@ function flashLive() {
 
 
 function cardExistingClicked() {
-    console.log(this.hpId)
     $("#observeHoneypot").modal('show');
 }
 
