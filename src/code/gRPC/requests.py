@@ -9,6 +9,8 @@ import json
 SERVER_HOST = "localhost"
 SERVER_PORT = 15001
 
+TLS_ENABLED = False
+
 class QueryClient(object):
     def __init__(self, tls_enabled:bool, public_key:str):
         if tls_enabled:
