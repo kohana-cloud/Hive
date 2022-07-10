@@ -13,7 +13,8 @@ from src.code.Users import User, ingest_users, append_user, generate_pwhash
 from src.code.gRPC.requests import query_for_honeypots, new_honeypot
 
 
-## TODO Dynamic query for version information
+
+## TODO Dynamic query for version information - Nate (nathaniel@singer.cloud)
 HIVE_VERSION = "0.1b"
 JQUERY_VERSION = "3.6.0"
 BOOTSTRAP_VERSION = "5.1.3"
@@ -21,10 +22,31 @@ CHARTJS_VERSION = "3.8.0"
 
 
 app = Flask(__name__, template_folder = os.path.abspath('src/pages'))
+
+configuration = Configuration("configuration.yaml")
+configuration.read_keys()
+
+app.config['TLS_ENABLED'] = configuration.tls_enabled
+app.config['PUBLIC_KEY'] = configuration.public_key
+
 app.config['SECRET_KEY'] = str(secrets.randbits(256))
-app.config['LOGINEXP_MINS'] = 30
+app.config['LOGINEXP_MINS'] = 120
 app.config['BCRYPT_ROUNDS'] = 10
 app.config['USER_CONFIG'] = "data/users.yaml"
+app.config['USERS'] = ingest_users(app.config['USER_CONFIG'])
+
+sessions = []
+
+
+
+# Display secret
+print(f"Secret: {app.config['SECRET_KEY']}")
+
+
+# Start the APP
+app.run()
+
+
 
 
 limiter = Limiter(app, key_func = get_remote_address, default_limits=["20/minute", "200/hour"])
@@ -38,15 +60,8 @@ csrf = CSRFProtect(app)
 def handle_csrf_error(e):
     return render_template('csrf_error.html', jwt_name = ""), 403
 
-app.config['USERS'] = ingest_users(app.config['USER_CONFIG'])
-sessions = []
 
-
-# Display secret
-print(f"Secret: {app.config['SECRET_KEY']}")
-
-
-# Decorators
+# Decorators 
 def require_user(f):
     @wraps(f)
     def authenticate(*args, **kwargs):
@@ -55,16 +70,22 @@ def require_user(f):
         # Retrieve and decode token, else error
         if ("Authentication" in request.cookies):
             token = request.cookies['Authentication'].split(" ")[1]
-            
-            try: data = jwt.decode(token, app.config['SECRET_KEY'], "HS256")
-            except Exception as e: return f"Error: {e}", 403
+
+            # If token is invalid, redirect to login
+            try:
+                data = jwt.decode(token, app.config['SECRET_KEY'], "HS256")
+            except jwt.exceptions.ExpiredSignatureError:
+                return render_template('login.html', invalid=True, login_error="Session expired, please login again!"), 302
+            except Exception as e:
+                print(f"JWT Error: {e}")
+                return render_template('login.html', invalid=True, login_error="Unknown JWT error occured!"), 302
 
         else: return redirect("login"), 302
 
         # Validate session based on authenticated user id from token
         if not (data['id'] in sessions): return redirect("login"), 302
 
-        # TODO Determine if token is close to experiation, regen if true
+        # TODO Determine if token is close to experiation, regen if true - Nate (nathaniel@singer.cloud)
 
         # Return original request if authentication passes
         return f(data, *args, **kwargs)
@@ -96,16 +117,14 @@ def login():
                 (user.username == request.form['username']) or
                 (user.email == request.form['username']) ][0]
         except IndexError:
-            return render_template('login.html', invalid=True), 401
+            return render_template('login.html', invalid=True, login_error="Invalid credentials!"), 401
 
         # Validate Password
         if not (user.check_password(request.form['password'])):
-            return render_template('login.html', invalid=True), 401
+            return render_template('login.html', invalid=True, login_error="Invalid credentials!"), 401
             
-        # Force logout if login attempted with existing, else open new session
-        if (user.id in sessions):
-            return redirect("logout", 302)
-        else: sessions.append(user.id)
+        # Add user to list of active sessions if not already existing
+        if not (user.id in sessions): sessions.append(user.id)
         
         # Generate JWT
         token = jwt.encode({
@@ -171,7 +190,7 @@ def add_user():
 @require_user
 @limiter.limit(None)
 def dashboard(jwt_data):
-    honeypots = query_for_honeypots(app.config['tls_enabled'], app.config['public_key'])
+    honeypots = query_for_honeypots(app.config['TLS_ENABLED'], app.config['PUBLIC_KEY'])
     return render_template('dashboard.html', count = len(honeypots), honeypots = honeypots, jwt_name = jwt_data['name'])
 
 @app.route('/profiler', methods=["GET"])
@@ -223,17 +242,7 @@ def send_report(path):
 def api_v1_honeypots(jwt_data):
     # add the new honeypot if its a post
     if (request.method == "POST"):
-        new_honeypot(request.form['type'], app.config['tls_enabled'], app.config['public_key'])
+        new_honeypot(request.form['type'], app.config['TLS_ENABLED'], app.config['PUBLIC_KEY'])
 
-    return jsonify(query_for_honeypots(app.config['tls_enabled'], app.config['public_key']))
+    return jsonify(query_for_honeypots(app.config['TLS_ENABLED'], app.config['PUBLIC_KEY']))
 
-
-if __name__ == '__main__':
-    configuration = Configuration("configuration.yaml")
-
-    # Get public key
-    configuration.read_keys()
-    app.config['tls_enabled'] = configuration.tls_enabled
-    app.config['public_key'] = configuration.public_key
-
-    app.run()

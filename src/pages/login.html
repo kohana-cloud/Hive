@@ -60,7 +60,7 @@
 
     {% if invalid %}
     <div class="alert alert-danger" role="alert" style="text-align: center; margin-top: 15px;">
-      Invalid credentials!
+      {{ login_error }}
       <script>document.getElementById("inputPassword").value = null</script>
     </div>
     {% endif %}
