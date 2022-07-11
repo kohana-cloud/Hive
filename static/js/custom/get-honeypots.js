@@ -3,7 +3,7 @@ var honeypotData = null;
 
 // Define base card templates
 function cardRenderTemplate(id) {
-    return `<card id="card-${id}" class="card" onclick="cardExistingClicked()" style="padding: 0; margin: 20px; width: 200px;"></card>`
+    return `<card id="card-${id}" class="card" onclick="cardExistingClicked(this)" style="padding: 0; margin: 20px; width: 200px;"></card>`
 }
 
 // Build header
@@ -251,7 +251,16 @@ function flashLive() {
 } var run = setInterval(flashLive, 250);
 
 
-function cardExistingClicked() {
+function cardExistingClicked(card) {
+    hpid = card.id.substring(5)
+
+    $.getJSON("api/v1/details/" + hpid, function(response) { 
+        currentHpData = response
+    })
+
+    document.getElementById("observerTitle").innerHTML = hpid;
+    
+    // Display card
     $("#observeHoneypot").modal('show');
 }
 
