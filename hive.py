@@ -38,7 +38,6 @@ app.config['USERS'] = ingest_users(app.config['USER_CONFIG'])
 sessions = []
 
 
-
 # Display secret
 print(f"Secret: {app.config['SECRET_KEY']}")
 
@@ -49,7 +48,7 @@ app.run()
 
 
 
-limiter = Limiter(app, key_func = get_remote_address, default_limits=["20/minute", "200/hour"])
+limiter = Limiter(app, key_func = get_remote_address, default_limits=["120/minute", "1000/hour"])
 @app.errorhandler(429)
 def ratelimit_handler(e):
     # TODO Log out user if logged in
