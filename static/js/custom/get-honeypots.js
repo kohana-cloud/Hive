@@ -290,7 +290,9 @@ async function updateAllCards() {
 
     // Create items array and sort high to low
     var sortedHoneypots = Object.keys(honeypotData).map(function(key) { return [key, honeypotData[key]["health"]] });
-    sortedHoneypots.sort(function(first, second) { return second[1] - first[1] });
+    
+    // Swap the last two values here to sort high low or low high
+    sortedHoneypots.sort(function(first, second) { return second[1]  - first[1]});
 
     
     
