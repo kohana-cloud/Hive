@@ -6,7 +6,7 @@ from time import perf_counter
 import grpc
 import json
 
-SERVER_HOST = "localhost"
+SERVER_HOST = "172.17.0.1"
 SERVER_PORT = 15001
 
 TLS_ENABLED = False

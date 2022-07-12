@@ -5,3 +5,4 @@ bcrypt==3.1.7
 Flask-WTF==1.0.1
 grpcio==1.46.3
 grpcio-tools==1.46.3
+pyyaml==5.4.1
