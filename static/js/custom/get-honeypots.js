@@ -254,21 +254,24 @@ function flashLive() {
 function cardExistingClicked(card) {
     hpid = card.id.substring(5)
 
-    $.getJSON("api/v1/details/" + hpid, function(response) { 
+    /*$.getJSON("api/v1/details/" + hpid, function(response) { 
         currentHpData = response
-    })
+    })*/
 
-
+    // Set controls based on health
     document.getElementById("observerTitle").innerHTML = hpid;
     hpHealth = honeypotData[hpid].health
 
-    // Set controls based on healthy
     if (hpHealth == 0) {
         // Healthy
-        console.log('healthy')
+        document.getElementById("hpStatusToggle").classList.add('hp-control-stop');
+        document.getElementById("hpStatusToggle").classList.remove('hp-control-start');
+        document.getElementById("hpStatusToggle").innerText = "Stop";
     } else if (hpHealth == 1) {
         // Degraded
-        console.log('degraded')
+        document.getElementById("hpStatusToggle").classList.add('hp-control-start');
+        document.getElementById("hpStatusToggle").classList.remove('hp-control-stop');
+        document.getElementById("hpStatusToggle").innerText = "Start";
     }
     
     // Display card
@@ -288,46 +291,45 @@ function delay(time) { return new Promise(resolve => setTimeout(resolve, time)) 
 // Create a new honeypot
 function newHP(hptype) {
     $.post('/api/v1/honeypot/create', { type: hptype }, function(data) {
-        honeypotData = data
-    }).done(function() {
         $("#createHoneypot").modal('hide');
         createAllCards();
-    });    
+    })
 }
 
 
 // Delete a honeypot
 function deleteHP(card) {
     $.post('/api/v1/honeypot/delete', { hpid: document.getElementById("observerTitle").innerHTML }, function(data) {
-        console.log(card.id)
-        honeypotData = data
-    }).done(function() {
+        console.log('start')
         $("#observeHoneypot").modal('hide');
-        createAllCards();
-    });
+        console.log('stop')
+    })
 }
 
 
-// Delete a honeypot
-function startHP(card) {
-    $.post('/api/v1/honeypot/start', { hpid: document.getElementById("observerTitle").innerHTML }, function(data) {
-        console.log(card.id)
-        honeypotData = data
-    }).done(function() {
-        $("#observeHoneypot").modal('hide');
-        createAllCards();
-    });
+// Start a honeypot
+function toggleHP(card) {
+    // Set controls based on health
+    document.getElementById("observerTitle").innerHTML = hpid;
+    hpHealth = honeypotData[hpid].health
+
+    if (hpHealth == 0) {
+        // Healthy - stophp
+        $.post('/api/v1/honeypot/stop', { hpid: document.getElementById("observerTitle").innerHTML }, function(data) {
+            $("#observeHoneypot").modal('hide');
+        })
+    } else if (hpHealth == 1) {
+        $.post('/api/v1/honeypot/start', { hpid: document.getElementById("observerTitle").innerHTML }, function(data) {
+            console.log('start')
+            $("#observeHoneypot").modal('hide');
+            console.log('stop')
+        })
+    }    
 }
 
-// Delete a honeypot
+// Stop a honeypot
 function stopHP(card) {
-    $.post('/api/v1/honeypot/stop', { hpid: document.getElementById("observerTitle").innerHTML }, function(data) {
-        console.log(card.id)
-        honeypotData = data
-    }).done(function() {
-        $("#observeHoneypot").modal('hide');
-        createAllCards();
-    });
+    
 }
     
 

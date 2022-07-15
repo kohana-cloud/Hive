@@ -183,7 +183,7 @@
         <img src="static/graphics/endpoint-images/ec2_grey.svg" style="max-height: 30px; border-radius: 5px;" alt="hpic">
         <h5 id="observerTitle" class="modal-title" style="display: block;">1a463804ea</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        <div class="hp-control-stop" style="top: 12px; right: 190px;" onclick="stopHP(this)">Stop</div>
+        <div class="hp-control-stop" id="hpStatusToggle" style="top: 12px; right: 190px;" onclick="toggleHP(this)">Stop</div>
         <div class="hp-control-delete" style="top: 12px; right: 75px;" onclick="deleteHP(this)">Delete</div>
       </div>
 
@@ -197,10 +197,27 @@
           border-radius: 5px;
           font-size: 17px;
           line-height: 1.9;
-          border: 2px dotted rgba(0, 0, 0, 0.125);
+          border: 2px solid rgba(0, 0, 0, 0.125);
         }
         .hp-control-stop:hover {
           background-color: #ff9900;
+          border: 2px solid rgba(0, 0, 0, 0.125);
+          cursor: pointer;
+        } 
+        
+        .hp-control-start {
+          position: absolute;
+          text-align: center;
+          background-color: #009ccc;
+          width: 100px;
+          height: 35px;
+          border-radius: 5px;
+          font-size: 17px;
+          line-height: 1.9;
+          border: 2px solid rgba(0, 0, 0, 0.125);
+        }
+        .hp-control-start:hover {
+          background-color: #00c3ff;
           border: 2px solid rgba(0, 0, 0, 0.125);
           cursor: pointer;
         } 
@@ -214,7 +231,7 @@
           border-radius: 5px;
           font-size: 17px;
           line-height: 1.9;
-          border: 2px dotted rgba(0, 0, 0, 0.125);
+          border: 2px solid rgba(0, 0, 0, 0.125);
         }
         .hp-control-delete:hover {
           background-color: #F00000;
