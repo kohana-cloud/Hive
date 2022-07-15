@@ -10,7 +10,7 @@ import secrets, os, jwt, datetime, uuid
 import time
 
 from src.code.Users import User, ingest_users, append_user, generate_pwhash
-from src.code.gRPC.requests import query_for_honeypots, new_honeypot
+from src.code.gRPC.requests import query_honeypots, control_honeypot
 
 
 
@@ -189,7 +189,7 @@ def add_user():
 @require_user
 @limiter.limit(None)
 def dashboard(jwt_data):
-    honeypots = query_for_honeypots(app.config['TLS_ENABLED'], app.config['PUBLIC_KEY'])
+    honeypots = query_honeypots(app.config['TLS_ENABLED'], app.config['PUBLIC_KEY'])
     return render_template('dashboard.html', count = len(honeypots), honeypots = honeypots, jwt_name = jwt_data['name'])
 
 @app.route('/profiler', methods=["GET"])
@@ -235,13 +235,55 @@ def send_report(path):
 
 # API router (in development)
 @csrf.exempt
-@app.route('/api/v1/honeypots', methods=["GET", "POST"])
+@app.route('/api/v1/honeypots', methods=["GET"])
 @require_user
 @limiter.limit("120/minute;1200/hour", override_defaults=True)
 def api_v1_honeypots(jwt_data):
+    return jsonify(query_honeypots(app.config['TLS_ENABLED'], app.config['PUBLIC_KEY']))
+
+
+@csrf.exempt
+@app.route('/api/v1/honeypot/create', methods=["GET", "POST"])
+@require_user
+@limiter.limit("120/minute;1200/hour", override_defaults=True)
+def api_v1_honeypot_create(jwt_data):
     # add the new honeypot if its a post
     if (request.method == "POST"):
-        new_honeypot(request.form['type'], app.config['TLS_ENABLED'], app.config['PUBLIC_KEY'])
+        control_honeypot(f"create:{request.form['type']}", app.config['TLS_ENABLED'], app.config['PUBLIC_KEY'])
 
-    return jsonify(query_for_honeypots(app.config['TLS_ENABLED'], app.config['PUBLIC_KEY']))
+    return jsonify(query_honeypots(app.config['TLS_ENABLED'], app.config['PUBLIC_KEY']))
+
+
+@csrf.exempt
+@app.route('/api/v1/honeypot/delete', methods=["POST"])
+@require_user
+@limiter.limit("120/minute;1200/hour", override_defaults=True)
+def api_v1_honeypot_delete(jwt_data):
+    # add the new honeypot if its a post
+    if (request.method == "POST"):
+        control_honeypot(f"delete:{request.form['hpid']}", app.config['TLS_ENABLED'], app.config['PUBLIC_KEY'])
+
+    return jsonify(query_honeypots(app.config['TLS_ENABLED'], app.config['PUBLIC_KEY']))
+
+@csrf.exempt
+@app.route('/api/v1/honeypot/start', methods=["POST"])
+@require_user
+@limiter.limit("120/minute;1200/hour", override_defaults=True)
+def api_v1_honeypot_start(jwt_data):
+    # add the new honeypot if its a post
+    if (request.method == "POST"):
+        control_honeypot(f"start:{request.form['hpid']}", app.config['TLS_ENABLED'], app.config['PUBLIC_KEY'])
+
+    return jsonify(query_honeypots(app.config['TLS_ENABLED'], app.config['PUBLIC_KEY']))
+
+@csrf.exempt
+@app.route('/api/v1/honeypot/stop', methods=["POST"])
+@require_user
+@limiter.limit("120/minute;1200/hour", override_defaults=True)
+def api_v1_honeypot_stop(jwt_data):
+    # add the new honeypot if its a post
+    if (request.method == "POST"):
+        control_honeypot(f"stop:{request.form['hpid']}", app.config['TLS_ENABLED'], app.config['PUBLIC_KEY'])
+
+    return jsonify(query_honeypots(app.config['TLS_ENABLED'], app.config['PUBLIC_KEY']))
 

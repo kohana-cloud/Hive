@@ -24,19 +24,19 @@ class QueryClient(object):
     def get_honeypots(self):
         return self.stub.GetHoneypots(query.Empty())
     
-    def new_honeypot(self, type:str):
-        return self.stub.NewHoneypot(query.StartHoneypot(
-                type=type
+    def control_honeypot(self, control_message:str):
+        return self.stub.ControlHoneypot(query.HoneypotControlCommand(
+                message=control_message
             ))
 
 
-def query_for_honeypots(tls_enabled:bool, public_key:str) -> str:
+def query_honeypots(tls_enabled:bool, public_key:str) -> str:
     client = QueryClient(tls_enabled, public_key)
     honeypots = client.get_honeypots().HoneypotsAsJSON
 
     return json.loads(honeypots)
 
 
-def new_honeypot(type:str, tls_enabled:bool, public_key:str) -> str:
+def control_honeypot(control_message:str, tls_enabled:bool, public_key:str) -> str:
     client = QueryClient(tls_enabled, public_key)
-    client.new_honeypot(type=type)
+    client.control_honeypot(control_message)
