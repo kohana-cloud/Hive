@@ -17,30 +17,85 @@
 <!-- acquire chartjs-->
 <script src="static/js/bundles/chart.min.js"></script>
 
-<div id="sortbar" class="card" style="display:flex; flex-direction:row; margin: auto; width: 500px; background-color: rgb(252, 252, 252); margin-top: 20px;">
-  <div class="dropdown" style="display:block; margin-right: 10px;">
-    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuSort" data-bs-toggle="dropdown" aria-expanded="false">
-    Honeypot Health
+<div id="sortbar" class="card" style="display:flex-box; border: none; flex-direction:row; margin: auto; margin-top: 20px; justify-content: center;">
+  <div class="dropdown" style="display:flex">
+    <button class="btn btn-sm btn-secondary dropdown-toggle" style="width:200px" type="button" id="dropdownMenuSort2" data-bs-toggle="dropdown" aria-expanded="false">
+    Sort
     </button>
     
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuSort">
-      <li><a class="dropdown-item">Honeypot Health</a></li>
-      <li><a class="dropdown-item">Honeypot Type</a></li>
-      <li><a class="dropdown-item">Honeypot ID</a></li>
-      <li><a class="dropdown-item">Owner ID</a></li>
+    <ul class="dropdown-menu" style="width: 200px;" aria-labelledby="dropdownMenuSort2">
+      <div class="dropdown-item">
+        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="targetHealth" id="targetHealth" checked>
+        <label class="form-check-label" for="targetHealth">
+          Target Health
+        </label>
+      </div>
+      <div class="dropdown-item">
+        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="targetType" id="targetType">
+        <label class="form-check-label" for="targetType">
+          Target Type
+        </label>
+      </div>
+      <div class="dropdown-item">
+        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="profileComponent" id="profileComponent">
+        <label class="form-check-label" for="profileComponent">
+          Profile Component
+        </label>
+      </div>
+      <div class="dropdown-item">
+        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="updateTimestamp" id="updateTimestamp">
+        <label class="form-check-label" for="updateTimestamp">
+          Update Timestamp
+        </label>
+      </div>
+      <div class="dropdown-item">
+        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="honeypotID" id="honeypotID">
+        <label class="form-check-label" for="honeypotID">
+          Honeypot ID
+        </label>
+      </div>
+      <div class="dropdown-item">
+        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="creatorID" id="creatorID">
+        <label class="form-check-label" for="creatorID">
+          Creator ID
+        </label>
+        
+      </div>
     </ul>
   </div>
 
-  <div class="dropdown" style="display:block">
-    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuSort2" data-bs-toggle="dropdown" aria-expanded="false">
-    Honeypot Health
+  <div style="width: 20px;"></div>
+
+  <div class="dropdown" style="display:flex">
+    <button class="btn btn-sm btn-secondary dropdown-toggle" style="width:200px" type="button" id="dropdownMenuSort2" data-bs-toggle="dropdown" aria-expanded="false">
+    Select
     </button>
     
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuSort2">
-      <li><a class="dropdown-item">Honeypot Health</a></li>
-      <li><a class="dropdown-item">Honeypot Type</a></li>
-      <li><a class="dropdown-item">Honeypot ID</a></li>
-      <li><a class="dropdown-item">Owner ID</a></li>
+    <ul class="dropdown-menu" style="width: 200px;" aria-labelledby="dropdownMenuSort2">
+      <div class="dropdown-item">
+        <input class="form-check-input" style="margin-right: 5px;" type="checkbox" id="checkHealthy" checked>
+        <label class="form-check-label" for="checkHealthy">
+          Healthy
+        </label>
+      </div>
+      <div class="dropdown-item">
+        <input class="form-check-input" style="margin-right: 5px;" type="checkbox" id="checkDegraded" checked>
+        <label class="form-check-label" for="checkDegraded">
+          Degraded
+        </label>
+      </div>
+      <div class="dropdown-item">
+        <input class="form-check-input" style="margin-right: 5px;" type="checkbox" id="checkCompromised" checked>
+        <label class="form-check-label" for="checkCompromised">
+          Compromised
+        </label>
+      </div>
+      <div class="dropdown-item">
+        <input class="form-check-input" style="margin-right: 5px;" type="checkbox" id="checkLiveAttacker" checked>
+        <label class="form-check-label" for="checkLiveAttacker">
+          Live Attacker
+        </label>
+      </div>
     </ul>
   </div>
 </div>
@@ -123,8 +178,8 @@
           <hpicon id="hp-lambda" onclick="newHP('lambda')">
             <img class="col hpiconimg" src="static/graphics/endpoint-images/lambda_orange.svg" alt="lambda">
           </hpicon>
-          <hpicon id="hp-deadline" onclick="newHP('deadline')">
-            <img class="col hpiconimg" src="static/graphics/endpoint-images/thinkbox_deadline_orange.svg" alt="deadline">
+          <hpicon id="hp-s3" onclick="newHP('s3')">
+            <img class="col hpiconimg" src="static/graphics/endpoint-images/s3_orange.svg" alt="s3">
           </hpicon>
         </div>
         <div style="display:flex; flex-wrap:wrap; margin-bottom: 25px;" style="margin-bottom: 50px;"> 

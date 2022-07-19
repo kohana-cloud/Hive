@@ -65,9 +65,9 @@ function cardRenderBody(id, attributes) {
             var cardGraphic = "lambda_grey.svg";
             var cardTitle = "Lambda";
             break;
-        case "DEADLINE":
-            var cardGraphic = "thinkbox_deadline_grey.svg";
-            var cardTitle = "TB Deadline";
+        case "S3":
+            var cardGraphic = "s3_grey.svg";
+            var cardTitle = "S3 Bucket";
             break;
         case "OUTPOST":
             var cardGraphic = "outpost_grey.svg";
@@ -95,11 +95,32 @@ function cardRenderBody(id, attributes) {
         <h5 class="card-title" style=" text-align: center; margin-top: 10px;">${cardTitle}</h5>
         <h6 class="card-subtitle mb-2 text-muted" style="text-align: center;">${id.split('-')[0]}</h6>
 
-        placeholder
-        placeholder
-        placeholder
+        <table class="table" style="font-size: 10px;">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col" style="text-align:left">Target</th>
+                    <th scope="col" style="text-align:right;">Assignment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">eno0</th>
+                    <td scope="row">
+                        <div style="text-align:right;">192.168.0.1/24</div>
+                        <div style="text-align:right;">192.168.1.1/24</div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">tun33</th>
+                    <td style="text-align:right;">192.168.1.1/24</td>
+                </tr>
+            </tbody>
+        </table>
 
-        <form class="form-grid" style="margin:auto; display:block; margin-top: 30px;">
+        <p style="font-size:12px; text-align: center;"><b>HP Owner:</b> Nate Singer</p>
+        <p style="font-size:7px; text-align:center; margin-top: -10px;"><i>c6f72742-f765-11ec-8c7a-75e0b7943059</i></p>
+
+        <form class="form-grid" style="margin:auto; display:block; margin-top: 10px;">
             <div class="row" style="margin-bottom: 5px;">
                 <button type="button" ${buttonResetDisabled} id="buttonUUID" class="btn btn-dark btn-sm" style="margin:auto; width: 90%;">Image</button>
             </div>

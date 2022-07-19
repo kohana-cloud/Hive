@@ -93,17 +93,17 @@ def require_user(f):
 
 # Redirects
 @app.route('/', methods=["GET"])
-@limiter.limit(None)
+##@limiter.limit(None)
 def root(): return redirect("dashboard"), 302
 
 @app.route('/statistics', methods=["GET"])
-@limiter.limit(None)
+#@limiter.limit(None)
 def statistics(): return redirect("stats"), 302
 
 
 # Static routes
 @app.route('/login', methods=["GET", "POST"])
-@limiter.limit(None)
+#@limiter.limit(None)
 def login():
     if (request.method == "GET"):
         return render_template('login.html', jwt_name = ""), 200
@@ -146,7 +146,7 @@ def login():
 
 @app.route('/logout', methods=["GET"])
 @require_user
-@limiter.limit(None)
+#@limiter.limit(None)
 def logout(jwt_data):
     token, data = None, None
 
@@ -166,7 +166,7 @@ def logout(jwt_data):
 
 # TODO Need to actually add all the validation/RBAC stuff - Nate (nathaniel@singer.cloud)
 """@app.route('/adduser', methods=["POST"])
-@limiter.limit(None)
+#@limiter.limit(None)
 def add_user():
     append_user(app.config['USER_CONFIG'], User(
         id = str(uuid.uuid1()),
@@ -187,23 +187,23 @@ def add_user():
 
 @app.route('/dashboard', methods=["GET"])
 @require_user
-@limiter.limit(None)
+#@limiter.limit(None)
 def dashboard(jwt_data):
     honeypots = query_honeypots(app.config['TLS_ENABLED'], app.config['PUBLIC_KEY'])
     return render_template('dashboard.html', count = len(honeypots), honeypots = honeypots, jwt_name = jwt_data['name'])
 
 @app.route('/profiler', methods=["GET"])
 @require_user
-@limiter.limit(None)
+#@limiter.limit(None)
 def profiler(jwt_data): return render_template('profiler.html', jwt_name = jwt_data['name'])
 
 @app.route('/stats', methods=["GET"])
 @require_user
-@limiter.limit(None)
+#@limiter.limit(None)
 def stats(jwt_data): return render_template('stats.html', jwt_name = jwt_data['name'])
 
 @app.route('/about', methods=["GET"])
-@limiter.limit(None)
+#@limiter.limit(None)
 def about():
     token, data = None, None
     
@@ -228,7 +228,7 @@ def about():
 
 # Dynamic routes for assets
 @app.route('/static/<path:path>')
-@limiter.limit(None)
+#@limiter.limit(None)
 def send_report(path):
     return send_from_directory('static', path)
 
@@ -237,7 +237,7 @@ def send_report(path):
 @csrf.exempt
 @app.route('/api/v1/honeypots', methods=["GET"])
 @require_user
-@limiter.limit("120/minute;1200/hour", override_defaults=True)
+#@limiter.limit("120/minute;1200/hour", override_defaults=True)
 def api_v1_honeypots(jwt_data):
     return jsonify(query_honeypots(app.config['TLS_ENABLED'], app.config['PUBLIC_KEY']))
 
@@ -245,7 +245,7 @@ def api_v1_honeypots(jwt_data):
 @csrf.exempt
 @app.route('/api/v1/honeypot/create', methods=["GET", "POST"])
 @require_user
-@limiter.limit("120/minute;1200/hour", override_defaults=True)
+#@limiter.limit("120/minute;1200/hour", override_defaults=True)
 def api_v1_honeypot_create(jwt_data):
     # add the new honeypot if its a post
     if (request.method == "POST"):
@@ -257,7 +257,7 @@ def api_v1_honeypot_create(jwt_data):
 @csrf.exempt
 @app.route('/api/v1/honeypot/delete', methods=["POST"])
 @require_user
-@limiter.limit("120/minute;1200/hour", override_defaults=True)
+#@limiter.limit("120/minute;1200/hour", override_defaults=True)
 def api_v1_honeypot_delete(jwt_data):
     # add the new honeypot if its a post
     if (request.method == "POST"):
@@ -268,7 +268,7 @@ def api_v1_honeypot_delete(jwt_data):
 @csrf.exempt
 @app.route('/api/v1/honeypot/start', methods=["POST"])
 @require_user
-@limiter.limit("120/minute;1200/hour", override_defaults=True)
+#@limiter.limit("120/minute;1200/hour", override_defaults=True)
 def api_v1_honeypot_start(jwt_data):
     # add the new honeypot if its a post
     if (request.method == "POST"):
@@ -279,7 +279,7 @@ def api_v1_honeypot_start(jwt_data):
 @csrf.exempt
 @app.route('/api/v1/honeypot/stop', methods=["POST"])
 @require_user
-@limiter.limit("120/minute;1200/hour", override_defaults=True)
+##@limiter.limit("120/minute;1200/hour", override_defaults=True)
 def api_v1_honeypot_stop(jwt_data):
     # add the new honeypot if its a post
     if (request.method == "POST"):
