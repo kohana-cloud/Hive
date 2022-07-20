@@ -132,7 +132,7 @@ def login():
             }, app.config['SECRET_KEY'], "HS256")
 
         # Build bearer
-        bearer = f"Bearer {token}"
+        bearer = f"Bearer {token.decode('ascii')}"
 
         # Respond
         rsp = redirect("/", 302)
