@@ -13,8 +13,10 @@
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
     <div class="text-center mb-4">
-      <img class="mb-4" src="static/graphics/logo.png" width="150" height="150" style="margin-top: 50px;" alt="hive logo">
-      <h1 class="h3 mb-3 font-weight-normal">Welcome to the Hive</h1>
+      <div class="mb4" style="margin-top: 50px;">
+          <img src="static/graphics/logo.svg" width="150" height="150" alt="hive logo" style="filter: drop-shadow(3px 2px 2px rgba(105, 105, 105, 0.4)); margin-bottom: 15px;"/>
+      </div>
+      <h1 class="h3 mb-3 font-weight-normal">Kohana Hive</h1>
     </div>
 
     <div class="form-label-group">
@@ -199,5 +201,6 @@ $('#createUser').on('shown.bs.modal', function () {
   $('#registrationFirstName').trigger('focus')
 })
 </script>
+
 {% endblock %}
   

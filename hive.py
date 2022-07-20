@@ -12,8 +12,6 @@ import time
 from src.code.Users import User, ingest_users, append_user, generate_pwhash
 from src.code.gRPC.requests import query_honeypots, control_honeypot
 
-
-
 ## TODO Dynamic query for version information - Nate (nathaniel@singer.cloud)
 HIVE_VERSION = "0.1b"
 JQUERY_VERSION = "3.6.0"
@@ -41,10 +39,8 @@ sessions = []
 # Display secret
 print(f"Secret: {app.config['SECRET_KEY']}")
 
-
 # Start the APP
-app.run()
-
+if __name__ == "__main__": app.run()
 
 
 
@@ -136,8 +132,7 @@ def login():
             }, app.config['SECRET_KEY'], "HS256")
 
         # Build bearer
-        print(token)
-        bearer = f"Bearer {token.decode('ascii')}"
+        bearer = f"Bearer {token}"
 
         # Respond
         rsp = redirect("/", 302)
