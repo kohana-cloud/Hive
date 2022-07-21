@@ -92,10 +92,6 @@ def require_user(f):
 ##@limiter.limit(None)
 def root(): return redirect("dashboard"), 302
 
-@app.route('/statistics', methods=["GET"])
-#@limiter.limit(None)
-def statistics(): return redirect("stats"), 302
-
 
 # Static routes
 @app.route('/login', methods=["GET", "POST"])
@@ -160,7 +156,7 @@ def logout(jwt_data):
     return redirect("login"), 302
 
 # TODO Need to actually add all the validation/RBAC stuff - Nate (nathaniel@singer.cloud)
-"""@app.route('/adduser', methods=["POST"])
+@app.route('/adduser', methods=["POST"])
 #@limiter.limit(None)
 def add_user():
     append_user(app.config['USER_CONFIG'], User(
@@ -178,7 +174,7 @@ def add_user():
     # Update users in memory after append
     app.config['USERS'] = ingest_users(app.config['USER_CONFIG'])
 
-    return redirect("login"), 302"""
+    return redirect("login"), 302
 
 @app.route('/dashboard', methods=["GET"])
 @require_user
@@ -192,10 +188,10 @@ def dashboard(jwt_data):
 #@limiter.limit(None)
 def profiler(jwt_data): return render_template('profiler.html', jwt_name = jwt_data['name'])
 
-@app.route('/stats', methods=["GET"])
+@app.route('/plotline', methods=["GET"])
 @require_user
 #@limiter.limit(None)
-def stats(jwt_data): return render_template('stats.html', jwt_name = jwt_data['name'])
+def stats(jwt_data): return render_template('plotline.html', jwt_name = jwt_data['name'])
 
 @app.route('/about', methods=["GET"])
 #@limiter.limit(None)
