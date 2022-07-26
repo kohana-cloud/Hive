@@ -276,5 +276,27 @@ def api_v1_honeypot_stop(jwt_data):
     if (request.method == "POST"):
         control_honeypot(f"stop:{request.form['hpid']}", app.config['TLS_ENABLED'], app.config['PUBLIC_KEY'])
 
-    return jsonify(query_honeypots(app.config['TLS_ENABLED'], app.config['PUBLIC_KEY']))
+    return "Success", 200
+
+@csrf.exempt
+@app.route('/api/v1/honeypot/reset', methods=["POST"])
+@require_user
+##@limiter.limit("120/minute;1200/hour", override_defaults=True)
+def api_v1_honeypot_reset(jwt_data):
+    # add the new honeypot if its a post
+    if (request.method == "POST"):
+        control_honeypot(f"reset:{request.form['hpid']}", app.config['TLS_ENABLED'], app.config['PUBLIC_KEY'])
+
+    return "Success", 200
+    
+@csrf.exempt
+@app.route('/api/v1/honeypot/stopattack', methods=["POST"])
+@require_user
+##@limiter.limit("120/minute;1200/hour", override_defaults=True)
+def api_v1_honeypot_stopattack(jwt_data):
+    # add the new honeypot if its a post
+    if (request.method == "POST"):
+        control_honeypot(f"stopattack:{request.form['hpid']}", app.config['TLS_ENABLED'], app.config['PUBLIC_KEY'])
+
+    return "Success", 200
 

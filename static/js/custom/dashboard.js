@@ -321,9 +321,21 @@ function newHP(hptype) {
 // Delete a honeypot
 function deleteHP(card) {
     $.post('/api/v1/honeypot/delete', { hpid: document.getElementById("observerTitle").innerHTML }, function(data) {
-        console.log('start')
         $("#observeHoneypot").modal('hide');
-        console.log('stop')
+    })
+}
+
+// Reset a honeypot
+function resetHP(card) {
+    $.post('/api/v1/honeypot/reset', { hpid: document.getElementById("observerTitle").innerHTML }, function(data) {
+        $("#observeHoneypot").modal('hide');
+    })
+}
+
+// Stop Attack, Triage
+function stopAttack(card) {
+    $.post('/api/v1/honeypot/stopattack', { hpid: document.getElementById("observerTitle").innerHTML }, function(data) {
+        $("#observeHoneypot").modal('hide');
     })
 }
 

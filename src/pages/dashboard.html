@@ -17,13 +17,14 @@
 <!-- acquire chartjs-->
 <script src="static/js/bundles/chart.min.js"></script>
 
+
 <div id="sortbar" class="card" style="display:flex-box; border: none; flex-direction:row; margin: auto; margin-top: 20px; justify-content: center;">
   <div class="dropdown" style="display:flex">
-    <button class="btn btn-sm btn-secondary dropdown-toggle" style="width:200px" type="button" id="dropdownMenuSort2" data-bs-toggle="dropdown" aria-expanded="false">
+    <button class="btn btn-sm btn-secondary dropdown-toggle" style="width:230px" type="button" id="dropdownMenuSort2" data-bs-toggle="dropdown" aria-expanded="false">
     Sort
     </button>
     
-    <ul class="dropdown-menu" style="width: 200px;" aria-labelledby="dropdownMenuSort2">
+    <ul class="dropdown-menu" style="width: 230px;" aria-labelledby="dropdownMenuSort2">
       <div class="dropdown-item">
         <input class="form-check-input" style="margin-right: 5px;" type="radio" name="targetHealth" id="targetHealth" checked>
         <label class="form-check-label" for="targetHealth">
@@ -67,11 +68,11 @@
   <div style="width: 20px;"></div>
 
   <div class="dropdown" style="display:flex">
-    <button class="btn btn-sm btn-secondary dropdown-toggle" style="width:200px" type="button" id="dropdownMenuSort2" data-bs-toggle="dropdown" aria-expanded="false">
+    <button class="btn btn-sm btn-secondary dropdown-toggle" style="width:230px" type="button" id="dropdownMenuSort2" data-bs-toggle="dropdown" aria-expanded="false">
     Select
     </button>
     
-    <ul class="dropdown-menu" style="width: 200px;" aria-labelledby="dropdownMenuSort2">
+    <ul class="dropdown-menu" style="width: 230px;" aria-labelledby="dropdownMenuSort2">
       <div class="dropdown-item">
         <input class="form-check-input" style="margin-right: 5px;" type="checkbox" id="checkHealthy" checked>
         <label class="form-check-label" for="checkHealthy">
@@ -413,12 +414,12 @@
           <div class="col-auto">
             <h5 style="text-align: center; margin-top: 15px;">Rapid Triggers</h5>
             <div style="display:flex; margin-top: 15px; height:300px; width:250px;flex-direction: column;justify-content: space-between;">
-              <button type="button" id="test1" class="btn btn-warning" style="width: 95%; margin: 0 auto;">Kill Attack, Start Triage</button>
+              <button type="button" id="test1" class="btn btn-warning" style="width: 95%; margin: 0 auto;" onclick="stopAttack(this)">Kill Attack, Start Triage</button>
               <button type="button" id="test2" class="btn btn-dark" style="width: 95%; margin: 0 auto;">Interactive Messenger</button>
               <button type="button" id="test3" class="btn btn-dark" style="width: 95%; margin: 0 auto;">Bait Dropper</button>
               <button type="button" id="test4" class="btn btn-dark" style="width: 95%; margin: 0 auto;">Lattency Generator</button>
               <button type="button" id="test5" class="btn btn-dark" style="width: 95%; margin: 0 auto;">Forensic Imager</button>
-              <button type="button" id="test6" class="btn btn-danger" style="width: 95%; margin: 0 auto;">Reset Honeypot</button>
+              <button type="button" id="test6" class="btn btn-danger" style="width: 95%; margin: 0 auto;" onclick="resetHP(this)">Reset Honeypot</button>
             </div>
           </div>
         </div>
