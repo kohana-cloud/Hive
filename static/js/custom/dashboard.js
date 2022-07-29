@@ -1,6 +1,9 @@
 // Data and template declerations
 var honeypotData = null;
 
+sortSetting = "health";
+
+
 // Define base card templates
 function cardRenderTemplate(id) {
     return `<card id="card-${id}" class="card" onclick="cardExistingClicked(this)" style="padding: 0; margin: 20px; width: 200px;"></card>`
@@ -364,8 +367,6 @@ function toggleHP(card) {
 function stopHP(card) {
     
 }
-    
-
 
 
 async function updateAllCards() {
@@ -375,7 +376,23 @@ async function updateAllCards() {
     $.getJSON("api/v1/honeypots", function(data) { honeypotData = data })
 
     // Create items array and sort high to low
-    var sortedHoneypots = Object.keys(honeypotData).map(function(key) { return [key, honeypotData[key]["health"]] });
+    if (sortSetting == "health") {
+        var sortedHoneypots = Object.keys(honeypotData).map(function(key) { return [key, honeypotData[key]["health"]] });
+    } else if (sortSetting == "type") {
+        var sortedHoneypots = Object.keys(honeypotData).map(function(key) { return [key, honeypotData[key]["type"]] });
+    } else if (sortSetting == "component") {
+        //unimplemented
+        var sortedHoneypots = Object.keys(honeypotData).map(function(key) { return [key, honeypotData[key]["health"]] });
+    } else if (sortSetting == "timestamp") {
+        var sortedHoneypots = Object.keys(honeypotData).map(function(key) { return [key, honeypotData[key]["updated"]] });
+    } else if (sortSetting == "hpid") {
+        var sortedHoneypots = Object.keys(honeypotData).map(function(key) { return [key, honeypotData[key]] });
+    } else if (sortSetting == "cid") {
+        var sortedHoneypots = Object.keys(honeypotData).map(function(key) { return [key, honeypotData[key]["owner"]] });
+    } else {
+        console.log("[!] WARNING: Unknown sort type used")
+        var sortedHoneypots = Object.keys(honeypotData).map(function(key) { return [key, honeypotData[key]["health"]] });
+    }
     
     // Swap the last two values here to sort high low or low high
     sortedHoneypots.sort(function(first, second) { return second[1]  - first[1]});
@@ -404,3 +421,36 @@ async function updateAllCards() {
     // Update the timestamp
     updateFooterTimeStamp();
 } var run = setInterval(updateAllCards, 1000);
+
+
+async function updateSorting(newSortSetting) {
+    document.getElementById("targetHealth").checked = false;
+    document.getElementById("targetType").checked = false;
+    document.getElementById("profileComponent").checked = false;
+    document.getElementById("updateTimestamp").checked = false;
+    document.getElementById("honeypotID").checked = false;
+    document.getElementById("creatorID").checked = false;
+
+    if (newSortSetting == "health") {
+        document.getElementById("targetHealth").checked = true;
+        sortSetting = "health";
+    } else if (newSortSetting == "type") {
+        document.getElementById("targetType").checked = true;
+        sortSetting = "type";
+    } else if (newSortSetting == "component") {
+        document.getElementById("profileComponent").checked = true;
+        sortSetting = "component";
+    } else if (newSortSetting == "timestamp") {
+        document.getElementById("updateTimestamp").checked = true;
+        sortSetting = "timestamp";
+    } else if (newSortSetting == "hpid") {
+        document.getElementById("honeypotID").checked = true;
+        sortSetting = "hpid";
+    } else if (newSortSetting == "cid") {
+        document.getElementById("creatorID").checked = true;
+        sortSetting = "cid";
+    }
+
+    console.log(sortSetting);
+    updateAllCards();
+}

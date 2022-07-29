@@ -26,37 +26,37 @@
     
     <ul class="dropdown-menu" style="width: 230px;" aria-labelledby="dropdownMenuSort2">
       <div class="dropdown-item">
-        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="targetHealth" id="targetHealth" checked>
+        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="targetHealth" id="targetHealth" onclick="updateSorting('health')" checked>
         <label class="form-check-label" for="targetHealth">
           Target Health
         </label>
       </div>
       <div class="dropdown-item">
-        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="targetType" id="targetType">
+        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="targetType" id="targetType" onclick="updateSorting('type')">
         <label class="form-check-label" for="targetType">
           Target Type
         </label>
       </div>
       <div class="dropdown-item">
-        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="profileComponent" id="profileComponent">
+        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="profileComponent" id="profileComponent" onclick="updateSorting('component')">
         <label class="form-check-label" for="profileComponent">
           Profile Component
         </label>
       </div>
       <div class="dropdown-item">
-        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="updateTimestamp" id="updateTimestamp">
+        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="updateTimestamp" id="updateTimestamp" onclick="updateSorting('timestamp')">
         <label class="form-check-label" for="updateTimestamp">
           Update Timestamp
         </label>
       </div>
       <div class="dropdown-item">
-        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="honeypotID" id="honeypotID">
+        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="honeypotID" id="honeypotID" onclick="updateSorting('hpid')">
         <label class="form-check-label" for="honeypotID">
           Honeypot ID
         </label>
       </div>
       <div class="dropdown-item">
-        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="creatorID" id="creatorID">
+        <input class="form-check-input" style="margin-right: 5px;" type="radio" name="creatorID" id="creatorID" onclick="updateSorting('cid')">
         <label class="form-check-label" for="creatorID">
           Creator ID
         </label>
