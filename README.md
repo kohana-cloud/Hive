@@ -1,11 +1,12 @@
+![HIVE](.rsrc/hive-banner.png)
 # Hive
-Web application front end for deploying and managing honeypots.
+Hive is Kohana's dashboard and frontend for deploying decoys and managing attacks against a target network. Hive is written in Flask, Bootstrap and a majority of the javascript us purejs.
 
-Going to update this eventually, hopefully this is enough for now. - Nate
+## Deployment and Usage
+Deploy Hive in development using the below flask command with precursor environment variables. Modify the port and host as required. You will also need to ensure that you have adaquet permissions to run the tool on a known-port if you choose to run it as follows.
+```
+FLASK_APP=hive.py FLASK_ENV=development flask run --port 80 --host=0.0.0.0
+```
 
-## Run The Webapp Locally
-### Install requirements
-```$ pip3 install -r requirements.txt```
-
-### Run Server
-```$ FLASK_APP=hive.py FLASK_ENV=development flask run --port 5000 --host=0.0.0.0```
+## Contribution Guidelines
+Kohana is deprecated as this point, but if you would like to continue to develop and maintain this project please get in touch with Nate Singer using the email located at the main README.
