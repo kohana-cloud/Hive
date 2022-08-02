@@ -7,6 +7,3 @@ Deploy Hive in development using the below flask command with precursor environm
 ```
 FLASK_APP=hive.py FLASK_ENV=development flask run --port 80 --host=0.0.0.0
 ```
-
-## Contribution Guidelines
-Kohana is deprecated as this point, but if you would like to continue to develop and maintain this project please get in touch with Nate Singer using the email located at the main README.
